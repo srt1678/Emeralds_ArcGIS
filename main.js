@@ -1,11 +1,12 @@
 import esriConfig from "@arcgis/core/config.js";
 import Map from "@arcgis/core/Map.js";
 import MapView from "@arcgis/core/views/MapView.js";
-import LayerList from "@arcgis/core/widgets/LayerList.js";
 import hospitalLayer from "./src/layers/HospitalLayer.js";
 import fireStationLayer from "./src/layers/FireStationLayer.js";
-import earthquakeLayer from "./src/layers/EarthquakeLayer.js";
-import { handleViewClick, setupLayerList } from "./src/handlers/EventHandler.js";
+import earthquakeLayer from "./src/layers/earthquakeLayer.js";
+
+import { handleRouteClick } from "./src/handlers/routeEventHandler.js";
+import { setupLayerList } from "./src/handlers/layerListSetup.js";
 
 import "./style.css";
 
@@ -29,31 +30,39 @@ const view = new MapView({
 map.addMany([hospitalLayer, fireStationLayer, earthquakeLayer]);
 
 view.when(() => {
-    hospitalLayer.queryFeatures({
-        where: "1=1",
-        outFields: ["*"],
-        returnGeometry: true,
-    }).then((hospitalResults) => {
-        fireStationLayer.queryFeatures({
+    hospitalLayer
+        .queryFeatures({
             where: "1=1",
             outFields: ["*"],
             returnGeometry: true,
-        }).then((fireStationResults) => {
-            const hospitals = hospitalResults.features;
-            const fireStations = fireStationResults.features;
+        })
+        .then((hospitalResults) => {
+            fireStationLayer
+                .queryFeatures({
+                    where: "1=1",
+                    outFields: ["*"],
+                    returnGeometry: true,
+                })
+                .then((fireStationResults) => {
+                    const hospitals = hospitalResults.features;
+                    const fireStations = fireStationResults.features;
 
-            if (hospitals.length > 0 && fireStations.length > 0) {
-                handleViewClick(view, hospitals[0].geometry, "start");
-                handleViewClick(view, fireStations[0].geometry, "finish");
-            }
+                    if (hospitals.length > 0 && fireStations.length > 0) {
+                        handleRouteClick(view, hospitals[0].geometry, "start");
+                        handleRouteClick(
+                            view,
+                            fireStations[0].geometry,
+                            "finish"
+                        );
+                    }
+                });
         });
-    });
 
     setupLayerList(view);
 });
 
 view.on("click", (event) => {
     view.hitTest(event).then((response) => {
-        handleViewClick(view, response);
+        handleRouteClick(view, response);
     });
 });

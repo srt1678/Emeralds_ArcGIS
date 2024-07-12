@@ -1,20 +1,8 @@
-import LayerList from "@arcgis/core/widgets/LayerList.js";
 import { addGraphic, getRoute } from "./RouteHandler.js";
 import hospitalLayer from "../layers/HospitalLayer.js";
 import fireStationLayer from "../layers/FireStationLayer.js";
 
-function setupLayerList(view) {
-    const layerList = new LayerList({
-        view: view,
-    });
-
-    view.ui.add(layerList, {
-        position: "top-right",
-        index: 1
-    });
-}
-
-function handleViewClick(view, response, type) {
+function handleRouteClick(view, response, type) {
     if (type) {
         addGraphic(view, type, response);
     } else {
@@ -34,7 +22,6 @@ function handleViewClick(view, response, type) {
                     getRoute(view);
                 } else {
                     view.graphics.removeAll();
-                    view.ui.empty("top-right");
                     addGraphic(view, "start", graphic.graphic.geometry);
                 }
             }
@@ -42,4 +29,4 @@ function handleViewClick(view, response, type) {
     }
 }
 
-export { handleViewClick, setupLayerList };
+export { handleRouteClick };
