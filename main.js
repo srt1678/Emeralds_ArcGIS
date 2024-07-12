@@ -3,7 +3,7 @@ import Map from "@arcgis/core/Map.js";
 import MapView from "@arcgis/core/views/MapView.js";
 import hospitalLayer from "./src/layers/HospitalLayer.js";
 import fireStationLayer from "./src/layers/FireStationLayer.js";
-import earthquakeLayer from "./src/layers/earthquakeLayer.js";
+import earthquakeLayer from "./src/layers/EarthquakeLayer.js";
 
 import { handleRouteClick } from "./src/handlers/routeEventHandler.js";
 import { setupLayerList } from "./src/handlers/layerListSetup.js";
@@ -11,6 +11,10 @@ import { setupLayerList } from "./src/handlers/layerListSetup.js";
 import "./style.css";
 
 esriConfig.apiKey = window.API_KEY;
+
+hospitalLayer.visible = false;
+fireStationLayer.visible = false;
+earthquakeLayer.visible = false;
 
 const map = new Map({
     basemap: "arcgis-navigation",
