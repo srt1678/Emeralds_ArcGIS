@@ -5,6 +5,7 @@ const hospitalUrl = "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/se
 const hospitalLayer = new FeatureLayer({
     url: hospitalUrl,
     outFields: ["*"],
+    visible: false,
     popupTemplate: {
         title: "{FACILITY}",
         content: [

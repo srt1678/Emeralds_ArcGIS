@@ -1,4 +1,4 @@
-import { addGraphic, getRoute } from "./routeHandler.js"; 
+import { addGraphic, getRoute } from "./routeHandler.js";
 import hospitalLayer from "../layers/HospitalLayer.js";
 import fireStationLayer from "../layers/FireStationLayer.js";
 

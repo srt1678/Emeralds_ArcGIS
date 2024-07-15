@@ -5,6 +5,7 @@ const fireStationUrl = "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest
 const fireStationLayer = new FeatureLayer({
     url: fireStationUrl,
     outFields: ["*"],
+    visible: false,
     popupTemplate: {
         title: "{STNID}",
         content: [

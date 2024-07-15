@@ -22,6 +22,7 @@ const earthquakeTemplate = {
 const earthquakeLayer = new FeatureLayer({
     url: "https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Earthquake/MapServer/5",
     outFields: ["*"],
+    visible: false,
     popupTemplate: earthquakeTemplate,
 });
 
