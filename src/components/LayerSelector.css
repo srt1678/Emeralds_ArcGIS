@@ -1,0 +1,63 @@
+.layer-selector {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-button {
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.toggle-button:hover {
+    background-color: #005fa3;
+}
+
+.layer-content {
+    margin-top: 10px;
+}
+
+.layer-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.layer-checkbox {
+    margin-right: 8px;
+}
+
+.layer-label {
+    margin: 0;
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.filter-checkbox {
+    margin-bottom: 5px;
+}
+
+.filter-label {
+    margin: 0;
+}

@@ -1,8 +1,12 @@
-import { addGraphic, getRoute } from "./routeHandler.js";
-import hospitalLayer from "../layers/HospitalLayer.js";
-import fireStationLayer from "../layers/FireStationLayer.js";
+import { addGraphic, getRoute } from "../utils/RouteService";
+import { hospitalLayer, fireStationLayer, earthquakeM6Layer } from "../layers";
 
-function handleRouteClick(view, response, type) {
+export const handleRouteClick = (
+    view,
+    response,
+    type,
+    
+) => {
     if (type) {
         addGraphic(view, type, response);
     } else {
@@ -19,7 +23,7 @@ function handleRouteClick(view, response, type) {
                     addGraphic(view, "start", graphic.graphic.geometry);
                 } else if (view.graphics.length === 1) {
                     addGraphic(view, "finish", graphic.graphic.geometry);
-                    getRoute(view);
+                    getRoute(view, earthquakeM6Layer); // Pass earthquakeM6Layer as barriers
                 } else {
                     view.graphics.removeAll();
                     addGraphic(view, "start", graphic.graphic.geometry);
@@ -27,6 +31,4 @@ function handleRouteClick(view, response, type) {
             }
         }
     }
-}
-
-export { handleRouteClick };
+};
