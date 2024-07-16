@@ -19,8 +19,6 @@ const ClearRouteButton = ({ clearRoute }) => {
                 cursor: "pointer",
                 zIndex: 1000,
                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "yellow", // Temporary background color for debugging
-                border: "2px solid red" // Temporary border for debugging
             }}
         >
             Clear Route

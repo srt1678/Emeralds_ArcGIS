@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
 import esriConfig from "@arcgis/core/config";
@@ -11,7 +11,6 @@ import {
     populationLayer,
     earthquakeM6Layer,
 } from "../layers";
-import { handleRouteClick } from "../handlers/routeClickHandler";
 import ClearRouteButton from "./ClearRouteButton";
 import LayerSelector from "./LayerSelector";
 import { clearRouteLayer } from "../utils/RouteService";
@@ -54,20 +53,14 @@ const MapComponent = ({
 
         view.when(() => {
             viewRef.current = view;
-            setView(view);
+            setView(view);  // Set the view reference in the parent component
             const layerList = new LayerList({
                 view: view,
             });
 
             // view.ui.add(layerList, "top-right");
-            // Initial query to populate the dashboard
-            queryHospitals();
-        });
 
-        view.on("click", (event) => {
-            // view.hitTest(event).then((response) => {
-            // handleRouteClick(view, response, null);
-            // });
+            queryInitialData(); // Initial query to populate the dashboard
         });
 
         return () => {
@@ -86,20 +79,18 @@ const MapComponent = ({
                     mapLayer.visible = layer.visible;
                 }
             });
-            queryHospitals(earthquakeM6Layer.definitionExpression); // Query again when active layers change
+            queryInitialData(); // Query again when active layers change
         }
     }, [activeLayers, layers]);
 
-    const queryHospitals = (filterExpression) => {
-        queryHospitalsUnderDamage(filterExpression)
-            .then((hospitalsUnderDamage) => {
-                // Debugging line to ensure the correct data is being set
-                console.log("Hospitals under damage:", hospitalsUnderDamage);
-                setHospitalsUnderDamage(hospitalsUnderDamage);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    const queryInitialData = async (filterExpression = "damage IN ('3', '3.5')") => {
+        try {
+            const hospitalsUnderDamage = await queryHospitalsUnderDamage(filterExpression);
+            console.log("Hospitals under damage:", hospitalsUnderDamage);
+            setHospitalsUnderDamage(hospitalsUnderDamage);
+        } catch (error) {
+            console.error("Error querying data:", error);
+        }
     };
 
     const getLayerById = (layerId) => {
@@ -144,7 +135,7 @@ const MapComponent = ({
                                   .map((v) => `${v}`)
                                   .join(", ")})`
                             : "damage IN ('3', '3.5')";
-                    queryHospitals(filterExpression);
+                    queryInitialData(filterExpression);
                 }}
             />
         </div>
