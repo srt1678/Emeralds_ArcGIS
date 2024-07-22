@@ -8,6 +8,9 @@ import {
     unreinforcedBuildingLayer,
     populationLayer,
     earthquakeM6Layer,
+    addEarthquakeGraphics,
+    dWWMainlinesLayer,
+    historicalEarthquakeLayer
 } from "./layers";
 import { getRoute } from "./utils/RouteService";
 import "./style.css";
@@ -44,6 +47,16 @@ const App = () => {
             title: "Earthquake M6 Layer",
             visible: earthquakeM6Layer.visible,
         },
+        {
+            id: dWWMainlinesLayer.id,
+            title: "DWW Mainlines",
+            visible: dWWMainlinesLayer.visible
+        },
+        {
+            id: historicalEarthquakeLayer.id,
+            title: "Historical Earthquake Damage",
+            visible: historicalEarthquakeLayer.visible
+        }
     ]);
 
     const [selectedDamageValues, setSelectedDamageValues] = useState([]);
@@ -56,6 +69,17 @@ const App = () => {
             layers.map((layer) => {
                 if (layer.id === layerId) {
                     const newVisibility = !layer.visible;
+                    if(layerId === earthquakeLayer.id && newVisibility){
+                        addEarthquakeGraphics().then(graphics => {
+                            if(view){
+                                view.graphics.addMany(graphics);
+                            }
+                        })
+                    }else if(layerId === earthquakeLayer.id && !newVisibility){
+                        if(view){
+                            view.graphics.removeAll();
+                        }
+                    }
                     return { ...layer, visible: newVisibility };
                 }
                 return layer;
