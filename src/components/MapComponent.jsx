@@ -10,6 +10,8 @@ import {
     unreinforcedBuildingLayer,
     populationLayer,
     earthquakeM6Layer,
+    dWWMainlinesLayer,
+    historicalEarthquakeLayer
 } from "../layers";
 import ClearRouteButton from "./ClearRouteButton";
 import LayerSelector from "./LayerSelector";
@@ -47,6 +49,8 @@ const MapComponent = ({
             earthquakeLayer,
             unreinforcedBuildingLayer,
             populationLayer,
+            dWWMainlinesLayer,
+            historicalEarthquakeLayer
         ];
 
         map.addMany(allLayers);
@@ -107,6 +111,10 @@ const MapComponent = ({
                 return populationLayer;
             case earthquakeM6Layer.id:
                 return earthquakeM6Layer;
+            case dWWMainlinesLayer.id:
+                return dWWMainlinesLayer;
+            case historicalEarthquakeLayer.id:
+                return historicalEarthquakeLayer;
             default:
                 return null;
         }
