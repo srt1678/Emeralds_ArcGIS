@@ -31,7 +31,7 @@ const unreinforcedBuildingTemplate = {
 const unreinforcedBuildingLayer = new FeatureLayer({
     url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/Unreinforced_Masonry_Buildings/FeatureServer",  
     visible: false,
-    opacity: 0.3,
+    opacity: 0.8,
     popupTemplate: unreinforcedBuildingTemplate,
 });
 

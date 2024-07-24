@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
 import esriConfig from "@arcgis/core/config";
+import Legend from "@arcgis/core/widgets/Legend.js";
 import LayerList from "@arcgis/core/widgets/LayerList";
 import {
     hospitalLayer,
@@ -41,6 +42,11 @@ const MapComponent = ({
             zoom: 12,
             constraints: { snapToZoom: false },
         });
+
+        let legend = new Legend({
+            view: view
+        })
+        view.ui.add(legend, "bottom-left");
 
         const allLayers = [
             earthquakeM6Layer,

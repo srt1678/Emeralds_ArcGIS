@@ -38,15 +38,15 @@ const renderer = new UniqueValueRenderer({
   }),
 });
 const historicalEarthquakeLayer = new FeatureLayer({
-	url: "https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Earthquake/MapServer/1",
-	/*
+	//url: "https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Earthquake/MapServer/1",
+	
   portalItem: {
     id: "e001a7c687f945438d41dfdd9858f40a",
     portal: "https://www.arcgis.com",
   },
-  */
+  
 	outFields: ["*"],
-  renderer: renderer,
+  //renderer: renderer,
 	visible: false,
   popupTemplate: historicalEarthquakeTemplate
 });
