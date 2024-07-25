@@ -42,6 +42,7 @@
 	border-radius: 4px;
 	padding: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
 }
 .section-title-container {
 	text-align: center;
@@ -65,6 +66,9 @@
 	height: 20px;
 	margin-right: 8px;
 }
+.layer-checkbox:hover{
+    cursor: pointer;
+}
 .eye-close-icon{
     color: rgb(202, 201, 201)
 }
@@ -76,17 +80,16 @@
 .filter-container {
 	display: flex;
 	flex-direction: column;
-	margin-top: 10px;
 }
 
 .filter-item {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .filter-checkbox {
-	margin-bottom: 5px;
+    margin-right: 8px;
 }
 
 .filter-label {
