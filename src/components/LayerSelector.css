@@ -1,63 +1,94 @@
+.toggle-button,
+.search-button {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	z-index: 1000;
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	color: white;
+	border: solid 1px black;
+	border-radius: 22.5px;
+	cursor: pointer;
+}
+.search-button {
+	right: 60px;
+}
+.toggle-button:hover,
+.search-button:hover {
+	background-color: black;
+	.toggle-icon-button {
+		color: white;
+	}
+	.search-icon-button {
+		color: white;
+	}
+}
+.toggle-icon-button,
+.search-icon-button {
+	width: 20px;
+	height: 20px;
+	color: black;
+}
+
 .layer-selector {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	position: absolute;
+	top: 60px;
+	right: 10px;
+	z-index: 1000;
+	background: white;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-.toggle-button {
-    margin-bottom: 10px;
-    padding: 8px 16px;
-    background-color: #007acc;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.section-title-container {
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
 }
-
-.toggle-button:hover {
-    background-color: #005fa3;
-}
-
-.layer-content {
-    margin-top: 10px;
+.section-divider {
+	margin: 0px 20px 10px 20px;
+	height: 1.5px;
+	background-color: black;
 }
 
 .layer-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
 }
 
 .layer-checkbox {
-    margin-right: 8px;
+	width: 20px;
+	height: 20px;
+	margin-right: 8px;
+}
+.eye-close-icon{
+    color: rgb(202, 201, 201)
 }
 
 .layer-label {
-    margin: 0;
+	margin: 0;
 }
 
 .filter-container {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	margin-top: 10px;
 }
 
 .filter-item {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 10px;
 }
 
 .filter-checkbox {
-    margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .filter-label {
-    margin: 0;
+	margin: 0;
 }

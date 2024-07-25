@@ -108,6 +108,7 @@ const App = () => {
         // }
     };
 
+    /*
     const resizerRef = useRef();
 
     useEffect(() => {
@@ -136,12 +137,13 @@ const App = () => {
             resizer.removeEventListener("mousedown", handleMouseDown);
         };
     }, []);
+    */
 
     return (
         <div className="App">
             <div
                 className="MapContainer"
-                style={{ flex: `0 0 calc(100% - ${dashboardWidth}px)` }}
+                //style={{ flex: `0 0 calc(100% - ${dashboardWidth}px)` }}
             >
                 <MapComponent
                     activeLayers={layers}
@@ -152,6 +154,7 @@ const App = () => {
                     handleFilterChange={handleFilterChange}
                 />
             </div>
+            {/**
             <div
                 className="DashboardContainer"
                 style={{ width: dashboardWidth }}
@@ -162,6 +165,7 @@ const App = () => {
                 />
                 <div ref={resizerRef} className="Resizer"></div>
             </div>
+             */}
         </div>
     );
 };
