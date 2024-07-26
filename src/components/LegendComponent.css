@@ -1,0 +1,36 @@
+.legend-toggle-button{
+  position: absolute;
+	bottom: 30px;
+	left: 15px;
+	z-index: 1000;
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	color: white;
+	border: solid 1px black;
+	border-radius: 22.5px;
+	cursor: pointer;
+}
+.legend-toggle-icon{
+  color: black;
+  width: 20px;
+  height: 20px;
+}
+.legend-toggle-button:hover{
+  background-color: black;
+	.toggle-icon-button {
+		color: white;
+	}
+	.legend-toggle-icon {
+		color: white;
+	}
+}
+.esri-legend {
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  bottom: 50px;
+}
+.esri-legend.esri-widget{
+  max-height: 20rem !important;
+}
