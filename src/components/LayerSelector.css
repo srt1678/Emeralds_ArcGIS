@@ -1,5 +1,4 @@
-.toggle-button,
-.search-button {
+.toggle-button {
 	position: absolute;
 	top: 15px;
 	right: 15px;
@@ -12,21 +11,13 @@
 	border-radius: 22.5px;
 	cursor: pointer;
 }
-.search-button {
-	right: 60px;
-}
-.toggle-button:hover,
-.search-button:hover {
+.toggle-button:hover {
 	background-color: black;
 	.toggle-icon-button {
 		color: white;
 	}
-	.search-icon-button {
-		color: white;
-	}
 }
-.toggle-icon-button,
-.search-icon-button {
+.toggle-icon-button{
 	width: 20px;
 	height: 20px;
 	color: black;

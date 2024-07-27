@@ -4,6 +4,7 @@ import MapView from "@arcgis/core/views/MapView";
 import esriConfig from "@arcgis/core/config";
 import Legend from "@arcgis/core/widgets/Legend.js";
 import LayerList from "@arcgis/core/widgets/LayerList";
+import Search from "@arcgis/core/widgets/Search.js";
 import {
 	hospitalLayer,
 	fireStationLayer,
@@ -18,6 +19,7 @@ import {
 	ClearRouteButton,
 	LayerSelector,
 	LegendComponent,
+	SearchBar,
 } from "./ComponentsIndex";
 import { clearRouteLayer } from "../utils/RouteService";
 import { queryHospitalsUnderDamage } from "../utils/HospitalService";
@@ -34,6 +36,7 @@ const MapComponent = ({
 	const mapRef = useRef(null);
 	const viewRef = useRef(null);
 	const legendRef = useRef(null);
+	const searchWidgetRef = useRef(null);
 
 	useEffect(() => {
 		esriConfig.apiKey = import.meta.env.VITE_ARCGIS_API_KEY;
@@ -76,7 +79,23 @@ const MapComponent = ({
 
 			queryInitialData(); // Initial query to populate the dashboard
 		});
-		view.ui.remove("zoom");
+		view.ui.remove("zoom"); //remove zoom in and out button
+
+		/*
+        // ArcGis build-in search bar + functionalities (alternative way)
+        const searchWidget = new Search({
+            view: view
+        })
+        view.ui.add(searchWidget, {
+            position: "top-right",
+            
+        })
+        */
+
+		searchWidgetRef.current = new Search({
+			view: view,
+			id: "searchWidget",
+		});
 
 		return () => {
 			if (view) {
@@ -154,10 +173,17 @@ const MapComponent = ({
 		});
 	};
 
+	const handleSearch = (searchTerm) => {
+		if (searchWidgetRef.current) {
+			searchWidgetRef.current.search(searchTerm);
+		}
+	};
+
 	return (
 		<div style={{ position: "relative", height: "100%", width: "100%" }}>
 			<div ref={mapRef} style={{ height: "100%", width: "100%" }}></div>
 			<ClearRouteButton clearRoute={clearRoute} />
+			<SearchBar onSearch={handleSearch} viewRef={viewRef} />
 			<LayerSelector
 				layers={layers}
 				toggleLayerVisibility={toggleLayerVisibility}

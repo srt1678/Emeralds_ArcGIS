@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./LayerSelector.css";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
-import { IoSearch } from "react-icons/io5";
 import LayerItem from "./LayerItem";
 import FilterEarthquakeDamage from "./FilterEarthquakeDamage";
 
@@ -26,9 +25,6 @@ const LayerSelector = ({ layers, toggleLayerVisibility, onFilterChange }) => {
 
 	return (
 		<>
-			<button className="search-button">
-				<IoSearch className="search-icon-button" />
-			</button>
 			<button onClick={toggleOpen} className="toggle-button">
 				{isOpen ? (
 					<RxCross2 className="toggle-icon-button" />
