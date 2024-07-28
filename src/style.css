@@ -3,41 +3,22 @@
 html,
 body,
 #root {
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 100%;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
 }
 
 .App {
-  display: flex;
-  height: 100vh;
+	height: 100vh;
 }
 
 .MapContainer {
-  flex: 1;
-  position: relative;
-  height: 100%;
+	flex: 1;
+	position: relative;
+	height: 100%;
 }
 
-.DashboardContainer {
-  border-left: 1px solid #ddd;
-  padding: 1em;
-  background: #f4f4f4;
-  overflow-y: auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 300px; /* Default width */
-  min-width: 200px; /* Minimum width */
-}
-
-.Resizer {
-  width: 10px;
-  cursor: ew-resize;
-  background-color: #ddd;
-  position: absolute;
-  left: -5px; /* Adjust to be centered on the border */
-  top: 0;
-  bottom: 0;
+.esri-attribution {
+	display: none !important;
 }

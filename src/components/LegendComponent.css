@@ -1,6 +1,6 @@
-.legend-toggle-button{
-  position: absolute;
-	bottom: 30px;
+.legend-toggle-button {
+	position: absolute;
+	bottom: 15px;
 	left: 15px;
 	z-index: 1000;
 	width: 40px;
@@ -11,13 +11,13 @@
 	border-radius: 22.5px;
 	cursor: pointer;
 }
-.legend-toggle-icon{
-  color: black;
-  width: 20px;
-  height: 20px;
+.legend-toggle-icon {
+	color: black;
+	width: 20px;
+	height: 20px;
 }
-.legend-toggle-button:hover{
-  background-color: black;
+.legend-toggle-button:hover {
+	background-color: black;
 	.toggle-icon-button {
 		color: white;
 	}
@@ -26,11 +26,11 @@
 	}
 }
 .esri-legend {
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  bottom: 50px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	position: absolute;
+	bottom: 40px;
 }
-.esri-legend.esri-widget{
-  max-height: 20rem !important;
+.esri-legend.esri-widget {
+	max-height: 36vh !important;
 }

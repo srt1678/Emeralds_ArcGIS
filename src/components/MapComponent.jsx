@@ -16,23 +16,26 @@ import {
 	historicalEarthquakeLayer,
 } from "../layers";
 import {
-	ClearRouteButton,
 	LayerSelector,
 	LegendComponent,
 	SearchBar,
+	DashboardComponent,
 } from "./ComponentsIndex";
 import { clearRouteLayer } from "../utils/RouteService";
 import { queryHospitalsUnderDamage } from "../utils/HospitalService";
 
 const MapComponent = ({
 	activeLayers,
+	view,
 	setView,
+	hospitalsUnderDamage,
 	setHospitalsUnderDamage,
 	layers,
 	toggleLayerVisibility,
 	handleFilterChange,
 }) => {
 	const [isLegendVisible, setIsLegendVisible] = useState(false);
+	const [selectEarthquakeDamage, setSelectEarthquakeDamage] = useState(false);
 	const mapRef = useRef(null);
 	const viewRef = useRef(null);
 	const legendRef = useRef(null);
@@ -49,6 +52,7 @@ const MapComponent = ({
 			center: [-122.3328, 47.6061],
 			zoom: 12,
 			constraints: { snapToZoom: false },
+			attribution: false,
 		});
 
 		legendRef.current = new Legend({
@@ -180,25 +184,34 @@ const MapComponent = ({
 	};
 
 	return (
-		<div style={{ position: "relative", height: "100%", width: "100%" }}>
-			<div ref={mapRef} style={{ height: "100%", width: "100%" }}></div>
-			<ClearRouteButton clearRoute={clearRoute} />
-			<SearchBar onSearch={handleSearch} viewRef={viewRef} />
-			<LayerSelector
-				layers={layers}
-				toggleLayerVisibility={toggleLayerVisibility}
-				onFilterChange={(selectedValues) => {
-					handleFilterChange(selectedValues);
-
-					const filterExpression =
-						selectedValues.length > 0
-							? `damage IN (${selectedValues.map((v) => `${v}`).join(", ")})`
-							: "damage IN ('3', '3.5')";
-					queryInitialData(filterExpression);
-				}}
-			/>
-			<LegendComponent toggleLegend={toggleLegend} />
-		</div>
+		<>
+			<div style={{ position: "relative", height: "100%", width: "100%" }}>
+				<div ref={mapRef} style={{ height: "100%", width: "100%" }}></div>
+				<SearchBar onSearch={handleSearch} viewRef={viewRef} />
+				<LayerSelector
+					layers={layers}
+					toggleLayerVisibility={toggleLayerVisibility}
+					selectEarthquakeDamage={selectEarthquakeDamage}
+					setSelectEarthquakeDamage={setSelectEarthquakeDamage}
+					onFilterChange={(selectedValues) => {
+						handleFilterChange(selectedValues);
+						const filterExpression =
+							selectedValues.length > 0
+								? `damage IN (${selectedValues.map((v) => `${v}`).join(", ")})`
+								: "damage IN ('3', '3.5')";
+						queryInitialData(filterExpression);
+					}}
+				/>
+				<LegendComponent toggleLegend={toggleLegend} />
+			</div>
+			{selectEarthquakeDamage && (
+				<DashboardComponent
+					hospitalsUnderDamage={hospitalsUnderDamage}
+					view={view}
+					clearRoute={clearRoute}
+				/>
+			)}
+		</>
 	);
 };
 

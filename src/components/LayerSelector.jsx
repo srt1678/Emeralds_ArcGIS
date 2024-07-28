@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import "./LayerSelector.css";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
-import LayerItem from "./LayerItem";
-import FilterEarthquakeDamage from "./FilterEarthquakeDamage";
+import { LayerItem, FilterEarthquakeDamage } from "./ComponentsIndex";
 
-const LayerSelector = ({ layers, toggleLayerVisibility, onFilterChange }) => {
+const LayerSelector = ({
+	layers,
+	toggleLayerVisibility,
+	selectEarthquakeDamage,
+	setSelectEarthquakeDamage,
+	onFilterChange,
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedDamageValues, setSelectedDamageValues] = useState([]);
-	const [selectEarthquakeDamage, setSelectEarthquakeDamage] = useState(false);
 
 	const toggleOpen = () => {
 		setIsOpen(!isOpen);
