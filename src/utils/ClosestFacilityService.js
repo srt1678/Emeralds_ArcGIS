@@ -2,52 +2,130 @@ import * as closestFacility from "@arcgis/core/rest/closestFacility.js";
 import ClosestFacilityParameters from "@arcgis/core/rest/support/ClosestFacilityParameters";
 import FeatureSet from "@arcgis/core/rest/support/FeatureSet";
 import Graphic from "@arcgis/core/Graphic";
-import { fireStationLayer } from "../layers";
-import esriConfig from "@arcgis/core/config";
+import * as geometryEngine from "@arcgis/core/geometry/geometryEngine";
+import { checkIncidentFacilityConnection } from "./RouteHelper";
+import { queryPopulationAlongRoute } from "./PopulationService";
 
-esriConfig.apiKey = import.meta.env.VITE_ARCGIS_API_KEY;
+export const findClosestFacilities = async (
+    incident,
+    facilityLayer,
+    view,
+    maxFacilities = 5,
+    driveTime = 30, // drive time of 30 min
+    bufferDistance = 10 // buffer distance in meters
+) => {
+    const url =
+        "https://route.arcgis.com/arcgis/rest/services/World/ClosestFacility/NAServer/ClosestFacility_World";
 
-export const findClosestFireStations = async (hospital, view) => {
-    console.log("Hospital:", JSON.stringify(hospital, null, 2));
-    
-    const url = "https://route-api.arcgis.com/arcgis/rest/services/World/ClosestFacility/NAServer/ClosestFacility_World";
-
-    // Create start feature (hospital)
-    const startFeature = new Graphic({
-        geometry: hospital.geometry,
+    // Create incident feature (e.g., hospital)
+    const incidentFeature = new Graphic({
+        geometry: incident.geometry,
         attributes: {
             ObjectID: 1,
-            ...hospital.hospital
-        }
+            ...incident.attributes,
+        },
     });
-
-    // Query fire stations
-    const fireStations = await fireStationLayer.queryFeatures({
+    // Query facilities (e.g., fire stations)
+    const facilities = await facilityLayer.queryFeatures({
         where: "1=1",
         outFields: ["*"],
         returnGeometry: true,
     });
-    console.log("Number of fire stations:", fireStations.features.length);
+    console.log("Number of facilities:", facilities.features.length);
 
     const params = new ClosestFacilityParameters({
         incidents: new FeatureSet({
-            features: [startFeature],
+            features: [incidentFeature],
         }),
         facilities: new FeatureSet({
-            features: fireStations.features,
+            features: facilities.features,
         }),
         returnRoutes: true,
         returnFacilities: true,
-        defaultTargetFacilityCount: 3,
+        defaultTargetFacilityCount: maxFacilities,
+        travelTime: driveTime * 60,
     });
 
     try {
         const results = await closestFacility.solve(url, params);
-        
-        showRoutes(results.routes, view);
-        addStartGraphic(hospital.geometry, view);
-        addClosestFacilityGraphics(results.facilities, view);
-        return results;
+
+        const facilitiesResult = results.facilities
+            ? results.facilities.features
+            : [];
+        const routesResult = results.routes ? results.routes.features : [];
+        // console.log("Routes result", JSON.stringify(routesResult, null, 2));
+
+        // Calculate population field to each route
+        const routesWithPopulation = await Promise.all(
+            routesResult.map(async (route) => {
+                try {
+                    const population = await queryPopulationAlongRoute(
+                        route.geometry
+                    );
+                    return {
+                        facilityId: route.attributes.FacilityID,
+                        population,
+                    };
+                } catch (error) {
+                    console.error(
+                        "Error calculating population for route:",
+                        error
+                    );
+                    return {
+                        facilityId: route.attributes.FacilityID,
+                        population: 0,
+                    };
+                }
+            })
+        );
+
+        // console.log(
+        //     routesWithPopulation,
+        //     JSON.stringify(routesWithPopulation, null, 2)
+        // );
+        // Create a mapping of FacilityID to population
+        const facilityPopulationMap = new Map();
+        routesWithPopulation.forEach((route) => {
+            facilityPopulationMap.set(route.facilityId, route.population);
+        });
+
+        // Sort routes by population (descending)
+        const sortedRoutes = routesResult.sort((a, b) => {
+            const populationA =
+                facilityPopulationMap.get(a.attributes.FacilityID) || 0;
+            const populationB =
+                facilityPopulationMap.get(b.attributes.FacilityID) || 0;
+            return populationB - populationA;
+        });
+
+        // Take the top 'maxFacilities' routes
+        const closestRoutes = sortedRoutes.slice(0, maxFacilities);
+
+        // console.log("Routes result", JSON.stringify(closestRoutes, null, 2));
+
+        // Map facilities to the sorted routes
+        const closestFacilities = closestRoutes.map((route) => {
+            return facilitiesResult.find(
+                (facility) =>
+                    facility.attributes.ObjectID === route.attributes.FacilityID
+            );
+        });
+
+        // console.log(
+        //     closestFacilities,
+        //     JSON.stringify(closestFacilities, null, 2)
+        // );
+
+        // Map routes back to the original route results
+
+        showRoutes(closestRoutes, view);
+        addIncidentGraphic(incident.geometry, view);
+        addFacilityGraphics(closestFacilities, view);
+
+        return {
+            facilities: closestFacilities,
+            routes: closestRoutes,
+        };
     } catch (error) {
         console.error("Error solving closest facility:", error);
         if (error.details) {
@@ -59,14 +137,16 @@ export const findClosestFireStations = async (hospital, view) => {
 
 function showRoutes(routes, view) {
     view.graphics.removeAll();
-    routes.features.forEach((route, i) => {
+    routes.forEach((route, index) => {
         const routeGraphic = new Graphic({
             geometry: route.geometry,
             symbol: {
                 type: "simple-line",
-                color: [255, 0, 0, 0.5],
-                width: 5
-            }
+                // Best route in green, others in red
+                color: index === 0 ? [0, 255, 0, 0.7] : [255, 0, 0, 0.5],
+                // Best route slightly thicker
+                width: index === 0 ? 6 : 4,
+            },
         });
         view.graphics.add(routeGraphic);
     });
@@ -78,7 +158,7 @@ function showRoutes(routes, view) {
     }
 }
 
-function addStartGraphic(point, view) {
+function addIncidentGraphic(point, view) {
     const graphic = new Graphic({
         symbol: {
             type: "simple-marker",
@@ -94,7 +174,7 @@ function addStartGraphic(point, view) {
     view.graphics.add(graphic);
 }
 
-function addClosestFacilityGraphics(facilities, view) {
+function addFacilityGraphics(facilities, view) {
     facilities.forEach((facility) => {
         const facilityGraphic = new Graphic({
             symbol: {

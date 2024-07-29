@@ -4,6 +4,7 @@ import earthquakeLayer from "./EarthquakeLayer.js";
 import unreinforcedBuildingLayer from "./UnreinforcedBuildingLayer.js";
 import populationLayer from "./PopulationLayer.js";
 import earthquakeM6Layer from "./EarthquakeM6Layer.js";
+import cityLightLineLayer from "./CityLightLineLayer.js";
 
 export {
     hospitalLayer,
@@ -12,4 +13,5 @@ export {
     unreinforcedBuildingLayer,
     populationLayer,
     earthquakeM6Layer,
+    cityLightLineLayer,
 };

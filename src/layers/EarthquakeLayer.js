@@ -2,6 +2,7 @@ import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
 
 // Define the popup template for the Earthquakes >1M layer
 const earthquakeTemplate = {
+    
     title: "Earthquake Magnitude: {EARTHQUAKE_MAGNITUDE}",
     content: [
         {
@@ -20,9 +21,11 @@ const earthquakeTemplate = {
 
 // Define the Earthquakes >1M layer
 const earthquakeLayer = new FeatureLayer({
+    id: "earthquakeLayer",
     url: "https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Earthquake/MapServer/5",
     outFields: ["*"],
     visible: false,
+    listMode: "show",
     popupTemplate: earthquakeTemplate,
 });
 

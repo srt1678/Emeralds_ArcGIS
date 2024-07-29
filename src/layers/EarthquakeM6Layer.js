@@ -3,6 +3,7 @@ import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer.js";
 import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol.js";
 
 const earthquakeM6Template = {
+    
     title: "Earthquake M6 Data: {OBJECTID}",
     content: [
         {
@@ -110,8 +111,10 @@ const renderer = new UniqueValueRenderer({
 });
 
 const earthquakeM6Layer = new FeatureLayer({
+    id: "earthquakeM6Layer",
     url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/Model_Deep_Earthquake_M6_8__Nisqually_2001/FeatureServer/4",
     visible: false,
+    listMode: "show",
     renderer: renderer,
     popupTemplate: earthquakeM6Template,
     id: "earthquakeM6Layer", // Unique ID for the layer
