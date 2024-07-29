@@ -18,11 +18,11 @@ import {
 import {
 	LayerSelector,
 	LegendComponent,
-	SearchBar,
 	DashboardComponent,
 } from "./ComponentsIndex";
 import { clearRouteLayer } from "../utils/RouteService";
 import { queryHospitalsUnderDamage } from "../utils/HospitalService";
+import "./SearchBar.css";
 
 const MapComponent = ({
 	activeLayers,
@@ -39,7 +39,7 @@ const MapComponent = ({
 	const mapRef = useRef(null);
 	const viewRef = useRef(null);
 	const legendRef = useRef(null);
-	const searchWidgetRef = useRef(null);
+	const searchRef = useRef(null);
 
 	useEffect(() => {
 		esriConfig.apiKey = import.meta.env.VITE_ARCGIS_API_KEY;
@@ -85,26 +85,24 @@ const MapComponent = ({
 		});
 		view.ui.remove("zoom"); //remove zoom in and out button
 
-		/*
-        // ArcGis build-in search bar + functionalities (alternative way)
-        const searchWidget = new Search({
-            view: view
-        })
-        view.ui.add(searchWidget, {
-            position: "top-right",
-            
-        })
-        */
-
-		searchWidgetRef.current = new Search({
+		// Search bar
+		const searchWidget = new Search({
 			view: view,
-			id: "searchWidget",
+			container: searchRef.current,
+			locationEnabled: false,
+		});
+		view.ui.add(searchWidget, {
+			position: "top-right",
 		});
 
 		return () => {
 			if (view) {
 				view.destroy();
 				view.container = null;
+			}
+			if (searchRef.current) {
+				searchRef.current.destroy();
+				searchRef.current = null;
 			}
 		};
 	}, [setView]);
@@ -177,17 +175,10 @@ const MapComponent = ({
 		});
 	};
 
-	const handleSearch = (searchTerm) => {
-		if (searchWidgetRef.current) {
-			searchWidgetRef.current.search(searchTerm);
-		}
-	};
-
 	return (
 		<>
 			<div style={{ position: "relative", height: "100%", width: "100%" }}>
 				<div ref={mapRef} style={{ height: "100%", width: "100%" }}></div>
-				<SearchBar onSearch={handleSearch} viewRef={viewRef} />
 				<LayerSelector
 					layers={layers}
 					toggleLayerVisibility={toggleLayerVisibility}
