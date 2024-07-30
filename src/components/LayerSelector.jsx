@@ -14,8 +14,10 @@ const damageValues = [
 
 const LayerSelector = ({ layer, filterField, onFilterChange }) => {
     // console.log(filterField)
-    const [isOpen, setIsOpen] = useState(false); // State to manage the visibility of the selector
-    const [selectedDamageValues, setSelectedDamageValues] = useState([]); // Initialize with an empty array for no checkboxes selected by default
+    // State to manage the visibility of the selector
+    const [isOpen, setIsOpen] = useState(false);
+    // Initialize with an empty array for no checkboxes selected by default
+    const [selectedDamageValues, setSelectedDamageValues] = useState([]);
 
     // Toggle the visibility of the selector
     const toggleOpen = () => {
@@ -40,6 +42,7 @@ const LayerSelector = ({ layer, filterField, onFilterChange }) => {
                       .join(", ")})`
                 : "";
         layer.definitionExpression = filterExpression;
+        console.log(filterExpression)
         onFilterChange(values);
     };
 

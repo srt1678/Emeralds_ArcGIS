@@ -3,7 +3,11 @@ import MapComponent from "./MapComponent";
 import CustomLayerList from "./CustomLayerList";
 import AnalysisComponent from "./AnalysisComponent";
 import LayerSelector from "./LayerSelector";
-import { clearHighlights, highlightFeature } from "../utils/HighlightService";
+import {
+    clearHighlights,
+    highlightFeature,
+    highlightArea,
+} from "../utils/HighlightService";
 import "../styles.css";
 import Graphic from "@arcgis/core/Graphic";
 import { queryPopulation } from "../utils/PopulationService";
@@ -16,6 +20,7 @@ const MapWrapper = ({
     handleFilterChange,
     sourceInfra,
     targetInfra,
+    neighborhoodGeometries,
 }) => {
     const [view, setView] = useState(null);
     const [populationData, setPopulationData] = useState([]);
@@ -41,6 +46,17 @@ const MapWrapper = ({
             // view.goTo(geometries);
         }
     }, [featuresUnderDamage, view]);
+    
+    useEffect(() => {
+        if (view) {
+            clearHighlights(view);
+            if (neighborhoodGeometries && neighborhoodGeometries.length > 0) {
+                neighborhoodGeometries.forEach((neighborhood) => {
+                    highlightArea(view, neighborhood);
+                });
+            }
+        }
+    }, [neighborhoodGeometries, view]);
 
     // Get analysis title
     const getTitle = () => {

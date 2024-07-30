@@ -1,31 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import Map from "@arcgis/core/Map";
 import MapView from "@arcgis/core/views/MapView";
-import {
-    hospitalLayer,
-    fireStationLayer,
-    earthquakeLayer,
-    unreinforcedBuildingLayer,
-    populationLayer,
-    earthquakeM6Layer,
-    cityLightLineLayer,
-} from "../layers";
+import allLayersConfig from "../config/allLayersConfig";
 import CustomLayerList from "./CustomLayerList";
 import LayerSelector from "./LayerSelector";
 import "../styles.css";
 
-const MapComponent = ({ setView, activeMode }) => {
+const MapComponent = ({ setView }) => {
     const mapRef = useRef(null);
     // const viewRef = useRef(null);
-    const visibleLayers = [
-        earthquakeM6Layer,
-        earthquakeLayer,
-        unreinforcedBuildingLayer,
-        populationLayer,
-        cityLightLineLayer,
-        hospitalLayer,
-        fireStationLayer,
-    ];
+    const visibleLayers = Object.values(allLayersConfig);
 
     useEffect(() => {
         // console.log("MapComponent useEffect called");
