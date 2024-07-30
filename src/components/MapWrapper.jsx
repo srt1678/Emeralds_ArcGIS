@@ -27,7 +27,7 @@ const MapWrapper = ({
 
     useEffect(() => {
         if (view && featuresUnderDamage && featuresUnderDamage.length > 0) {
-            clearHighlights(view);
+            // clearHighlights(view);
             featuresUnderDamage.forEach((feature, index) => {
                 highlightFeature(view, feature);
             });
@@ -79,7 +79,7 @@ const MapWrapper = ({
             </div>
             <div
                 className="map-container"
-                style={{ flex: "1 1 auto", position: "relative" }}
+                // style={{ flex: "1 1 auto", position: "relative" }}
             >
                 <MapComponent setView={setView} activeMode={activeMode} />
                 {view && <CustomLayerList view={view} />}

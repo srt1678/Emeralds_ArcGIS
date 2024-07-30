@@ -1,9 +1,9 @@
 .analysis {
-    height: 200px; /* Adjust the height as needed */
+    height: 200px; 
     overflow-y: auto;
     background-color: #fff;
     padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
     border-radius: 5px;
 }
 

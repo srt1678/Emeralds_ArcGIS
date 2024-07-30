@@ -6,12 +6,18 @@
 .menu-container {
     width: 16%;
     background-color: #f8f8f8;
+
+    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
+
+}
+
+.menu-inner {
     padding: 10px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8;
 }
 
 .main-container {
-    width: 84%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -19,9 +25,9 @@
 
 .analysis-container {
     flex: 1;
-    background-color: #eaeaea;
+    background-color: #f0f0f0;
     padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
     z-index: 1;
 }
 
@@ -33,10 +39,16 @@
 
 .map-container {
     flex: 4;
+    height: calc(100% - 20px);
+    padding: 10px;
     position: relative;
     overflow: hidden;
+    background-color: #f0f0f0;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
     height: 100%;
     min-height: 400px;
+
+
 }
 
 .map-view {
@@ -44,15 +56,6 @@
     height: 100%;
 }
 
-.map-container>div {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-}
 
 .layer-list-wrapper {
     position: absolute;
@@ -61,7 +64,7 @@
     background: white;
     border: 1px solid #ccc;
     padding: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); */
     z-index: 10;
 }
 

@@ -136,7 +136,7 @@ export const findClosestFacilities = async (
 };
 
 function showRoutes(routes, view) {
-    view.graphics.removeAll();
+    // view.graphics.removeAll();
     routes.forEach((route, index) => {
         const routeGraphic = new Graphic({
             geometry: route.geometry,

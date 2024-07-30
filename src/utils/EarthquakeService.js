@@ -1,5 +1,6 @@
 import FeatureSet from "@arcgis/core/rest/support/FeatureSet";
 import Graphic from "@arcgis/core/Graphic";
+import { intersects } from "@arcgis/core/geometry/geometryEngine";
 
 // Function to query features from any layer
 export const queryEarthquakeFeatures = async (

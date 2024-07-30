@@ -61,13 +61,15 @@ const App = () => {
     return (
         <div className="app">
             <div className="menu-container">
-                <Menu
-                    onOptionSelect={handleOptionSelect}
-                    onSourceInfraSelect={setSourceInfra}
-                    onTargetInfraSelect={setTargetInfra}
-                    onNeighborhoodSelect={setSelectedNeighborhoods}
-                    infrastructureLayers={infrastructureLayers}
-                />
+                <div className="menu-inner">
+                    <Menu
+                        onOptionSelect={handleOptionSelect}
+                        onSourceInfraSelect={setSourceInfra}
+                        onTargetInfraSelect={setTargetInfra}
+                        onNeighborhoodSelect={setSelectedNeighborhoods}
+                        infrastructureLayers={infrastructureLayers}
+                    />
+                </div>
             </div>
             <div className="main-container">
                 <div className="map-container">
