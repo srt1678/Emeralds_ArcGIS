@@ -10,7 +10,7 @@ export const queryHospitals = async () => {
             outFields: ["*"],
             returnGeometry: true,
         });
-        console.log(`Queried hospitals: ${hospitalResult.features.length}`);
+        // console.log(`Queried hospitals: ${hospitalResult.features.length}`);
         return hospitalResult.features;
     } catch (error) {
         console.error("Error querying hospital features:", error);
@@ -23,8 +23,8 @@ export const queryHospitalsUnderDamage = async (
     filterExpression = "damage IN (3, 3.5)"
 ) => {
     try {
-        console.log("For hospitals under damage");
-        console.log(`Using filter expression: ${filterExpression}`);
+        // console.log("For hospitals under damage");
+        // console.log(`Using filter expression: ${filterExpression}`);
 
         const hospitalFeatures = await queryHospitals();
         const earthquakeFeatures = await queryEarthquakes(filterExpression);
@@ -47,7 +47,7 @@ export const queryHospitalsUnderDamage = async (
             });
         });
 
-        console.log(`Hospitals under damage: ${hospitalsUnderDamage.length}`);
+        // console.log(`Hospitals under damage: ${hospitalsUnderDamage.length}`);
         return hospitalsUnderDamage;
     } catch (error) {
         console.error("Error querying features:", error);
@@ -55,16 +55,4 @@ export const queryHospitalsUnderDamage = async (
     }
 };
 
-// export const queryHospitalsUnderDamage = async (filterExpression) => {
-//     // Construct the query for hospitals
-//     const query = hospitalLayer.createQuery();
-//     query.where = filterExpression;
 
-//     try {
-//         const results = await hospitalLayer.queryFeatures(query);
-//         return results.features.map((feature) => feature.attributes);
-//     } catch (error) {
-//         console.error("Error querying hospitals:", error);
-//         throw error;
-//     }
-// };

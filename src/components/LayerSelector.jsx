@@ -1,128 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./LayerSelector.css";
+// import { earthquakeM6Layer } from "../layers";
 
-const LayerSelector = ({ layers, toggleLayerVisibility, onFilterChange }) => {
+// List of damage values for the earthquake filter
+const damageValues = [
+    { damage: "0", label: "<10% not damaged" },
+    { damage: "1", label: ">10% light damage" },
+    { damage: "2", label: "10-50% major non-structural damage" },
+    { damage: "2.5", label: "50%+ major non-structural damage" },
+    { damage: "3", label: "10-50% structural damage" },
+    { damage: "3.5", label: "50%+ structural damage" },
+];
+
+const LayerSelector = ({ layer, filterField, onFilterChange }) => {
+    // console.log(filterField)
+    // State to manage the visibility of the selector
     const [isOpen, setIsOpen] = useState(false);
+    // Initialize with an empty array for no checkboxes selected by default
     const [selectedDamageValues, setSelectedDamageValues] = useState([]);
 
+    // Toggle the visibility of the selector
     const toggleOpen = () => {
         setIsOpen(!isOpen);
     };
 
+    // Handle changes in the selected damage values
     const handleDamageChange = (value) => {
         const newSelectedValues = selectedDamageValues.includes(value)
             ? selectedDamageValues.filter((v) => v !== value)
             : [...selectedDamageValues, value];
-
         setSelectedDamageValues(newSelectedValues);
-        onFilterChange(newSelectedValues);
+        applyFilter(newSelectedValues);
     };
+
+    // Apply the filter based on the selected damage values
+    const applyFilter = (values) => {
+        const filterExpression =
+            values.length > 0
+                ? `${filterField} IN (${values
+                      .map((v) => `'${v}'`)
+                      .join(", ")})`
+                : "";
+        layer.definitionExpression = filterExpression;
+        console.log(filterExpression)
+        onFilterChange(values);
+    };
+
+    // Apply the default filter when the component mounts
+    useEffect(() => {
+        applyFilter(selectedDamageValues);
+    }, []);
 
     return (
         <div className="layer-selector">
             <button onClick={toggleOpen} className="toggle-button">
-                {isOpen ? "Hide Layers" : "Show Layers"}
+                {isOpen ? "Hide Filters" : "Show Filters"}
             </button>
             {isOpen && (
                 <div className="layer-content">
-                    <h3>Layers</h3>
-                    {layers.map((layer) => (
-                        <div key={layer.id} className="layer-item">
-                            <input
-                                type="checkbox"
-                                checked={layer.visible}
-                                onChange={() => toggleLayerVisibility(layer.id)}
-                                className="layer-checkbox"
-                            />
-                            <label className="layer-label">{layer.title}</label>
-                        </div>
-                    ))}
-                    <h3>Filter Earthquake Damage</h3>
+                    <h3>Earthquake Damage</h3>
                     <div className="filter-container">
-                        <div className="filter-item">
-                            <input
-                                type="checkbox"
-                                id="damage-0"
-                                value="0"
-                                checked={selectedDamageValues.includes("0")}
-                                onChange={() => handleDamageChange("0")}
-                                className="filter-checkbox"
-                            />
-                            <label htmlFor="damage-0" className="filter-label">
-                                &lt;10% not damaged
-                            </label>
-                        </div>
-                        <div className="filter-item">
-                            <input
-                                type="checkbox"
-                                id="damage-1"
-                                value="1"
-                                checked={selectedDamageValues.includes("1")}
-                                onChange={() => handleDamageChange("1")}
-                                className="filter-checkbox"
-                            />
-                            <label htmlFor="damage-1" className="filter-label">
-                                &gt;10% light damage
-                            </label>
-                        </div>
-                        <div className="filter-item">
-                            <input
-                                type="checkbox"
-                                id="damage-2"
-                                value="2"
-                                checked={selectedDamageValues.includes("2")}
-                                onChange={() => handleDamageChange("2")}
-                                className="filter-checkbox"
-                            />
-                            <label htmlFor="damage-2" className="filter-label">
-                                10-50% major non-structural damage
-                            </label>
-                        </div>
-                        <div className="filter-item">
-                            <input
-                                type="checkbox"
-                                id="damage-2.5"
-                                value="2.5"
-                                checked={selectedDamageValues.includes("2.5")}
-                                onChange={() => handleDamageChange("2.5")}
-                                className="filter-checkbox"
-                            />
-                            <label
-                                htmlFor="damage-2.5"
-                                className="filter-label"
-                            >
-                                50%+ major non-structural damage
-                            </label>
-                        </div>
-                        <div className="filter-item">
-                            <input
-                                type="checkbox"
-                                id="damage-3"
-                                value="3"
-                                checked={selectedDamageValues.includes("3")}
-                                onChange={() => handleDamageChange("3")}
-                                className="filter-checkbox"
-                            />
-                            <label htmlFor="damage-3" className="filter-label">
-                                10-50% structural damage
-                            </label>
-                        </div>
-                        <div className="filter-item">
-                            <input
-                                type="checkbox"
-                                id="damage-3.5"
-                                value="3.5"
-                                checked={selectedDamageValues.includes("3.5")}
-                                onChange={() => handleDamageChange("3.5")}
-                                className="filter-checkbox"
-                            />
-                            <label
-                                htmlFor="damage-3.5"
-                                className="filter-label"
-                            >
-                                50%+ structural damage
-                            </label>
-                        </div>
+                        {damageValues.map((value) => (
+                            <div key={value.damage} className="filter-item">
+                                <input
+                                    type="checkbox"
+                                    id={`damage-${value.damage}`}
+                                    value={value.damage}
+                                    checked={selectedDamageValues.includes(
+                                        value.damage
+                                    )}
+                                    onChange={() =>
+                                        handleDamageChange(value.damage)
+                                    }
+                                    className="filter-checkbox"
+                                />
+                                <label
+                                    htmlFor={`damage-${value.damage}`}
+                                    className="filter-label"
+                                >
+                                    {value.label}
+                                </label>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}

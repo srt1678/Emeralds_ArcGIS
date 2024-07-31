@@ -4,8 +4,9 @@ import {earthquakeLayer, addEarthquakeGraphics } from "./EarthquakeLayer.js";
 import unreinforcedBuildingLayer from "./UnreinforcedBuildingLayer.js";
 import populationLayer from "./PopulationLayer.js";
 import earthquakeM6Layer from "./EarthquakeM6Layer.js";
-import dWWMainlinesLayer from "./DWWMainlines.js";
-import historicalEarthquakeLayer from "./HistoricalEarthquake.js";
+import earthquakeM7Layer from "./EarthquakeM7Layer.js";
+import cityLightLineLayer from "./CityLightLineLayer.js";
+import neighborhoodLayer from "./NeighborhoodLayer.js";
 
 export {
     hospitalLayer,
@@ -14,7 +15,7 @@ export {
     unreinforcedBuildingLayer,
     populationLayer,
     earthquakeM6Layer,
-    addEarthquakeGraphics,
-    dWWMainlinesLayer,
-    historicalEarthquakeLayer
+    earthquakeM7Layer,
+    cityLightLineLayer,
+    neighborhoodLayer
 };

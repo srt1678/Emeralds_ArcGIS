@@ -1,8 +1,7 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
 
-
 const unreinforcedBuildingTemplate = {
-    title: "Unreinforced Masonry Building: {BUILDING_NAME}",  // Adjust the field name as necessary
+    title: "Unreinforced Masonry Building: {BUILDING_NAME}",
     content: [
         {
             type: "fields",
@@ -29,11 +28,12 @@ const unreinforcedBuildingTemplate = {
     ],
 };
 const unreinforcedBuildingLayer = new FeatureLayer({
-    url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/Unreinforced_Masonry_Buildings/FeatureServer",  
+    id: "unreinforcedBuildingLayer",
+    url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/Unreinforced_Masonry_Buildings/FeatureServer",
     visible: false,
     opacity: 0.3,
+    listMode: "show",
     popupTemplate: unreinforcedBuildingTemplate,
 });
-
 
 export default unreinforcedBuildingLayer;

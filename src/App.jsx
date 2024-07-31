@@ -1,166 +1,88 @@
-import React, { useState, useRef, useEffect } from "react";
-import MapComponent from "./components/MapComponent";
-import DashboardComponent from "./components/DashboardComponent";
-import {
-    hospitalLayer,
-    fireStationLayer,
-    earthquakeLayer,
-    unreinforcedBuildingLayer,
-    populationLayer,
-    earthquakeM6Layer,
-    addEarthquakeGraphics,
-    dWWMainlinesLayer,
-    historicalEarthquakeLayer
-} from "./layers";
-import { getRoute } from "./utils/RouteService";
-import "./style.css";
+
+import React, { useState, useEffect } from "react";
+import MapWrapper from "./components/MapWrapper";
+import Menu from "./components/Menu";
+import { queryFeaturesUnderDamage } from "./utils/DamagedInfraQueryService";
+import { queryNeighborhoodGeometries } from "./utils/NeighborhoodQueryService";
+import "./styles.css";
+import esriConfig from "@arcgis/core/config";
+import { earthquakeScenarioModes } from "./config/earthquakeSenarioModes";
+import { infrastructureLayers } from "./config/infrastructureLayers";
+
+const apiKey = esriConfig.apiKey;
 
 const App = () => {
-    const [layers, setLayers] = useState([
-        {
-            id: hospitalLayer.id,
-            title: "Hospital Layer",
-            visible: hospitalLayer.visible,
-        },
-        {
-            id: fireStationLayer.id,
-            title: "Fire Station Layer",
-            visible: fireStationLayer.visible,
-        },
-        {
-            id: earthquakeLayer.id,
-            title: "Earthquake Layer",
-            visible: earthquakeLayer.visible,
-        },
-        {
-            id: unreinforcedBuildingLayer.id,
-            title: "Unreinforced Building Layer",
-            visible: unreinforcedBuildingLayer.visible,
-        },
-        {
-            id: populationLayer.id,
-            title: "Population Layer",
-            visible: populationLayer.visible,
-        },
-        {
-            id: earthquakeM6Layer.id,
-            title: "Earthquake M6 Layer",
-            visible: earthquakeM6Layer.visible,
-        },
-        {
-            id: dWWMainlinesLayer.id,
-            title: "DWW Mainlines",
-            visible: dWWMainlinesLayer.visible
-        },
-        {
-            id: historicalEarthquakeLayer.id,
-            title: "Historical Earthquake Damage",
-            visible: historicalEarthquakeLayer.visible
+    const [activeMode, setActiveMode] = useState(null);
+    const [selectedValues, setSelectedValues] = useState([]);
+    const [featuresUnderDamage, setFeaturesUnderDamage] = useState([]);
+    const [sourceInfra, setSourceInfra] = useState(null);
+    const [targetInfra, setTargetInfra] = useState(null);
+    const [selectedNeighborhoods, setSelectedNeighborhoods] = useState([]);
+    const [neighborhoodGeometries, setNeighborhoodGeometries] = useState([]);
+
+    // Select earthquake senarios
+    const handleOptionSelect = (option) => {
+        if (option && earthquakeScenarioModes[option]) {
+            setActiveMode(option);
+        } else {
+            setActiveMode(null);
+            setFeaturesUnderDamage([]);
         }
-    ]);
-
-    const [selectedDamageValues, setSelectedDamageValues] = useState([]);
-    const [view, setView] = useState(null);
-    const [hospitalsUnderDamage, setHospitalsUnderDamage] = useState([]);
-    const [dashboardWidth, setDashboardWidth] = useState(300); // Default width
-
-    const toggleLayerVisibility = (layerId) => {
-        setLayers(
-            layers.map((layer) => {
-                if (layer.id === layerId) {
-                    const newVisibility = !layer.visible;
-                    if(layerId === earthquakeLayer.id && newVisibility){
-                        addEarthquakeGraphics().then(graphics => {
-                            if(view){
-                                view.graphics.addMany(graphics);
-                            }
-                        })
-                    }else if(layerId === earthquakeLayer.id && !newVisibility){
-                        if(view){
-                            view.graphics.removeAll();
-                        }
-                    }
-                    return { ...layer, visible: newVisibility };
-                }
-                return layer;
-            })
-        );
     };
 
-    const handleFilterChange = (selectedValues = []) => {
-        setSelectedDamageValues(selectedValues);
-
-        const filterExpression =
-            selectedValues.length > 0
-                ? `damage IN (${selectedValues.map((v) => `${v}`).join(", ")})`
-                : "damage IN (3, 3.5)";
-
-        earthquakeM6Layer.definitionExpression = filterExpression;
-
-        // Debugging line to ensure the filter expression is correctly set
-        console.log(`Setting filter: ${filterExpression}`);
-
-        if (earthquakeM6Layer.source) {
-            earthquakeM6Layer.source.refresh();
+    const handleFilterChange = async (earthquakeLayer, filterField, values) => {
+        setSelectedValues(values);
+        if (sourceInfra) {
+            const features = await queryFeaturesUnderDamage(
+                earthquakeLayer,
+                infrastructureLayers[sourceInfra].layer,
+                values,
+                filterField,
+                neighborhoodGeometries
+            );
+            setFeaturesUnderDamage(features);
         }
-        // if (view) {
-        //     getRoute(view, earthquakeM6Layer, selectedValues);
-        // }
     };
-
-    const resizerRef = useRef();
 
     useEffect(() => {
-        const handleMouseDown = (e) => {
-            document.addEventListener("mousemove", handleMouseMove);
-            document.addEventListener("mouseup", handleMouseUp);
-        };
-
-        const handleMouseMove = (e) => {
-            const newWidth = window.innerWidth - e.clientX;
-            if (newWidth > 200 && newWidth < window.innerWidth - 100) {
-                // Minimum and maximum width constraints
-                setDashboardWidth(newWidth);
+        const fetchNeighborhoodGeometries = async () => {
+            if (selectedNeighborhoods.length > 0) {
+                const geometries = await queryNeighborhoodGeometries(
+                    selectedNeighborhoods.map((n) => n.value)
+                );
+                setNeighborhoodGeometries(geometries);
+            } else {
+                setNeighborhoodGeometries([]);
             }
         };
 
-        const handleMouseUp = () => {
-            document.removeEventListener("mousemove", handleMouseMove);
-            document.removeEventListener("mouseup", handleMouseUp);
-        };
-
-        const resizer = resizerRef.current;
-        resizer.addEventListener("mousedown", handleMouseDown);
-
-        return () => {
-            resizer.removeEventListener("mousedown", handleMouseDown);
-        };
-    }, []);
+        fetchNeighborhoodGeometries();
+    }, [selectedNeighborhoods]);
 
     return (
-        <div className="App">
-            <div
-                className="MapContainer"
-                style={{ flex: `0 0 calc(100% - ${dashboardWidth}px)` }}
-            >
-                <MapComponent
-                    activeLayers={layers}
-                    setView={setView}
-                    setHospitalsUnderDamage={setHospitalsUnderDamage}
-                    layers={layers}
-                    toggleLayerVisibility={toggleLayerVisibility}
-                    handleFilterChange={handleFilterChange}
-                />
+        <div className="app">
+            <div className="menu-container">
+                <div className="menu-inner">
+                    <Menu
+                        onOptionSelect={handleOptionSelect}
+                        onSourceInfraSelect={setSourceInfra}
+                        onTargetInfraSelect={setTargetInfra}
+                        onNeighborhoodSelect={setSelectedNeighborhoods}
+                        infrastructureLayers={infrastructureLayers}
+                    />
+                </div>
             </div>
-            <div
-                className="DashboardContainer"
-                style={{ width: dashboardWidth }}
-            >
-                <DashboardComponent
-                    hospitalsUnderDamage={hospitalsUnderDamage}
-                    view={view}
-                />
-                <div ref={resizerRef} className="Resizer"></div>
+            <div className="main-container">
+                <div className="map-container">
+                    <MapWrapper
+                        activeMode={activeMode}
+                        featuresUnderDamage={featuresUnderDamage}
+                        handleFilterChange={handleFilterChange}
+                        sourceInfra={sourceInfra}
+                        targetInfra={targetInfra}
+                        neighborhoodGeometries={neighborhoodGeometries}
+                    />
+                </div>
             </div>
         </div>
     );

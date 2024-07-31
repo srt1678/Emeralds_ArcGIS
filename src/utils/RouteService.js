@@ -4,7 +4,6 @@ import Stop from "@arcgis/core/rest/support/Stop";
 import PolygonBarrier from "@arcgis/core/rest/support/PolygonBarrier";
 import esriConfig from "@arcgis/core/config";
 
-esriConfig.apiKey = import.meta.env.ARCGIS_API_KEY;
 const routeSymbol = {
     type: "simple-line",
     color: [5, 150, 255],

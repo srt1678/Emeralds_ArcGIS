@@ -3,9 +3,11 @@ import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
 const hospitalUrl = "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Hospital/FeatureServer/0";
 
 const hospitalLayer = new FeatureLayer({
+    id: "hospitalLayer",
     url: hospitalUrl,
     outFields: ["*"],
     visible: false,
+    listMode: "show",
     popupTemplate: {
         title: "{FACILITY}",
         content: [
