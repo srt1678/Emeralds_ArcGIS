@@ -1,0 +1,52 @@
+/* Overall widget */
+.esri-search {
+	position: absolute;
+	top: 0px;
+	right: 100px;
+	height: 40px;
+	border-radius: 20px;
+	width: 300px !important;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Input field */
+.esri-search__input {
+	border-radius: 20px;
+	height: 40px !important;
+	padding-left: 15px !important;
+}
+
+/* Search button */
+.esri-search__submit-button {
+	position: absolute;
+	right: -50px;
+	width: 40px !important;
+	height: 40px !important;
+	background-color: white !important;
+	color: black !important;
+	border: solid 1px black !important;
+	border-radius: 20px !important;
+	cursor: pointer;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.esri-icon-search {
+	font-size: 20px !important;
+	line-height: 40px !important;
+}
+
+.esri-search__submit-button:hover {
+	background-color: #f3f3f3 !important;
+}
+
+/* Clear button */
+.esri-search__clear-button {
+	border-radius: 20px;
+	height: 40px !important;
+	width: 40px !important;
+}
+
+.esri-search__suggestions-menu {
+	border-radius: 10px;
+	margin-top: 3px !important;
+}

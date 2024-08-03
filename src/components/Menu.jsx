@@ -75,7 +75,8 @@ const Menu = ({
 
     return (
         <div className="menu">
-            <h2>Menu</h2>
+            <div className="menu-title">Routing</div>
+            <div className="section-divider"></div>
             <div className="menu-item">
                 <label htmlFor="sourceInfra">Source Infrastructure:</label>
                 <select
@@ -117,24 +118,6 @@ const Menu = ({
                     onChange={(selected) => setSelectedNeighborhoods(selected)}
                 />
             </div>
-            <hr className="menu-separator" />
-            <ul>
-                <h2>Earthquake Scenarios</h2>
-                {Object.keys(earthquakeScenarioModes).map((mode) => (
-                    <li key={mode} className="menu-item-inline">
-                        <input
-                            type="checkbox"
-                            id={mode}
-                            onChange={(e) =>
-                                onOptionSelect(e.target.checked ? mode : null)
-                            }
-                        />
-                        <label htmlFor={mode}>
-                            {earthquakeScenarioModes[mode].name}
-                        </label>
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 };

@@ -21,6 +21,7 @@ const neighborhoodTemplate = {
 const neighborhoodLayer = new FeatureLayer({
     id: "neighborhoodLayer",
     url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/Community_Reporting_Areas_ACS5Y10/FeatureServer/0", 
+    title: "Community Reporting Areas",
     outFields: ["*"],
     visible: false,
     listMode: "show",

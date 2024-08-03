@@ -20,6 +20,7 @@ const populationTemplate = {
 const populationLayer = new FeatureLayer({
     id: "populationLayer",
     url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/ACS_Total_Population_Boundaries/FeatureServer/2",  
+    title: "Total Population",
     visible: false,
     listMode: "show",
     popupTemplate: populationTemplate,

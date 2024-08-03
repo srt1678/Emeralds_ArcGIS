@@ -26,6 +26,7 @@ const earthquakeTemplate = {
 const earthquakeLayer = new FeatureLayer({
     id: "earthquakeLayer",
     url: "https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Earthquake/MapServer/5",
+		title: "Seattle Earthquake M1",
     outFields: ["*"],
     visible: false,
     listMode: "show",

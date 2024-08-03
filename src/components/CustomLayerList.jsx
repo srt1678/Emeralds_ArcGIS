@@ -1,10 +1,11 @@
-
 import React, { useEffect, useRef } from "react";
 import Expand from "@arcgis/core/widgets/Expand";
 import LayerList from "@arcgis/core/widgets/LayerList";
+import "./CustomLayerList.css"
 
-const CustomLayerList = ({ view }) => {
+const CustomLayerList = ({ view, onLayerSelect, earthquakeM6Layer, earthquakeM7Layer }) => {
     const expandRef = useRef(null);
+    const layerListRef = useRef(null);
 
     useEffect(() => {
         if (!view) return;
@@ -19,25 +20,20 @@ const CustomLayerList = ({ view }) => {
             if (!layerList) {
                 layerList = new LayerList({
                     view: view,
-                    listItemCreatedFunction: (event) => {
-                        const item = event.item;
-                        if (item.layer.renderer) {
-                            item.panel = {
-                                content: "legend",
-                                open: false,
-                            };
-                        }
-                    },
                 });
+                layerListRef.current = layerList;
             }
-
             // Create Expand if it doesn't exist
             if (!expand) {
                 expand = new Expand({
                     view: view,
                     content: layerList,
                     expandIconClass: "esri-icon-layer-list",
-                    group: "top-right",
+                    group: "bottom-right",
+                    placement: "bottom",
+                    collapseIcon: "chevrons-up",
+                    autoCollapse: false
+                    
                 });
                 expandRef.current = expand;
             }
@@ -46,34 +42,50 @@ const CustomLayerList = ({ view }) => {
             if (view.ui && !view.ui.find((widget) => widget === expand)) {
                 view.ui.add(expand, "top-right");
             }
+
+            const handleLayerVisibilityChange = (layer) => {
+                if (layer.visible) {
+                    onLayerSelect(layer);
+                } else if ((!earthquakeM6Layer || !earthquakeM6Layer.visible) && 
+                           (!earthquakeM7Layer || !earthquakeM7Layer.visible)) {
+                    onLayerSelect(null);
+                }
+            };
+
+            if (earthquakeM6Layer) {
+                earthquakeM6Layer.watch('visible', () => handleLayerVisibilityChange(earthquakeM6Layer));
+            }
+
+            if (earthquakeM7Layer) {
+                earthquakeM7Layer.watch('visible', () => handleLayerVisibilityChange(earthquakeM7Layer));
+            }
         };
 
         // Watch for changes in view.ready
-        const watchHandle = view.watch('ready', (isReady) => {
-            if (isReady) {
-                createAndAddWidgets();
-            }
-        });
-
-        // Initial check in case view is already ready
         if (view.ready) {
             createAndAddWidgets();
+        } else {
+            const watchHandle = view.watch('ready', (isReady) => {
+                if (isReady) {
+                    createAndAddWidgets();
+                    watchHandle.remove();
+                }
+            });
         }
 
         // Cleanup function
         return () => {
-            watchHandle.remove();
             if (view && !view.destroyed) {
                 view.ui.remove(expandRef.current);
             }
             if (expandRef.current) {
                 expandRef.current.destroy();
             }
-            if (layerList) {
-                layerList.destroy();
+            if (layerListRef.current) {
+                layerListRef.current.destroy();
             }
         };
-    }, [view]);
+    }, [view, onLayerSelect, earthquakeM6Layer, earthquakeM7Layer]);
 
     return null;
 };

@@ -3,6 +3,7 @@ import "./AnalysisComponent.css";
 import { findClosestFacilities } from "../utils/ClosestFacilityService";
 import { fireStationLayer } from "../layers";
 import { infrastructureLayers } from "../config/infrastructureLayers";
+import ClearRouteButton from "./ClearRouteButton";
 
 const AnalysisComponent = ({
     view,
@@ -55,18 +56,19 @@ const AnalysisComponent = ({
 
     return (
         <div className="analysis">
-            <h2>{title}</h2>
-            <div className="sort-buttons">
-                <button onClick={() => setSortBy("damage")}>
+            <div className="analysis-title">{title}</div>
+            <div className="sort-buttons-container">
+                <button className="sort-buttons" onClick={() => setSortBy("damage")}>
                     Sort by Damage Level
                 </button>
-                <button onClick={() => setSortBy("population")}>
+                <button className="sort-buttons" onClick={() => setSortBy("population")}>
                     Sort by Population
                 </button>
             </div>
             {sortedFeatures.length === 0 ? (
-                <p>No {title.toLowerCase()} under damage.</p>
+                <div className="no-infrastructure-text">No {title.toLowerCase()} under damage.</div>
             ) : (
+                <>
                 <ul>
                     {sortedFeatures.map((item, index) => {
                         const populationInfo = populationData.find(
@@ -91,7 +93,9 @@ const AnalysisComponent = ({
                                     ? populationInfo.population.toLocaleString()
                                     : "Loading..."}
                                 <br />
+                                <div className="find-closest-infrastructure-container">
                                 <button
+                                    className="find-closest-infrastructure-button"
                                     onClick={() =>
                                         handleClosestFacilityAnalysis(item)
                                     }
@@ -100,10 +104,13 @@ const AnalysisComponent = ({
                                     {infrastructureLayers[targetInfra]?.name ||
                                         "Facilities"}
                                 </button>
+                                </div>
                             </li>
                         );
                     })}
                 </ul>
+                <ClearRouteButton />
+                </>
             )}
         </div>
     );
