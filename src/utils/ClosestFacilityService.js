@@ -31,6 +31,7 @@ export const findClosestFacilities = async (
         outFields: ["*"],
         returnGeometry: true,
     });
+    // console.log(JSON.stringify(incidentFeature, null, 2));
     console.log("Number of facilities:", facilities.features.length);
 
     const params = new ClosestFacilityParameters({

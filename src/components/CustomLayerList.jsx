@@ -1,9 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import Expand from "@arcgis/core/widgets/Expand";
 import LayerList from "@arcgis/core/widgets/LayerList";
-import "./CustomLayerList.css"
+import "./CustomLayerList.css";
 
-const CustomLayerList = ({ view, onLayerSelect, earthquakeM6Layer, earthquakeM7Layer }) => {
+const CustomLayerList = ({
+    view,
+    onLayerSelect,
+    earthquakeM6Layer,
+    earthquakeM7Layer,
+    earthquakeCustomScenarioLayer,
+}) => {
     const expandRef = useRef(null);
     const layerListRef = useRef(null);
 
@@ -32,8 +38,7 @@ const CustomLayerList = ({ view, onLayerSelect, earthquakeM6Layer, earthquakeM7L
                     group: "bottom-right",
                     placement: "bottom",
                     collapseIcon: "chevrons-up",
-                    autoCollapse: false
-                    
+                    autoCollapse: false,
                 });
                 expandRef.current = expand;
             }
@@ -46,18 +51,30 @@ const CustomLayerList = ({ view, onLayerSelect, earthquakeM6Layer, earthquakeM7L
             const handleLayerVisibilityChange = (layer) => {
                 if (layer.visible) {
                     onLayerSelect(layer);
-                } else if ((!earthquakeM6Layer || !earthquakeM6Layer.visible) && 
-                           (!earthquakeM7Layer || !earthquakeM7Layer.visible)) {
+                } else if (
+                    (!earthquakeM6Layer || !earthquakeM6Layer.visible) &&
+                    (!earthquakeM7Layer || !earthquakeM7Layer.visible) &&
+                    (!earthquakeCustomScenarioLayer ||
+                        !earthquakeCustomScenarioLayer.visible)
+                ) {
                     onLayerSelect(null);
                 }
             };
 
             if (earthquakeM6Layer) {
-                earthquakeM6Layer.watch('visible', () => handleLayerVisibilityChange(earthquakeM6Layer));
+                earthquakeM6Layer.watch("visible", () =>
+                    handleLayerVisibilityChange(earthquakeM6Layer)
+                );
             }
-
             if (earthquakeM7Layer) {
-                earthquakeM7Layer.watch('visible', () => handleLayerVisibilityChange(earthquakeM7Layer));
+                earthquakeM7Layer.watch("visible", () =>
+                    handleLayerVisibilityChange(earthquakeM7Layer)
+                );
+            }
+            if (earthquakeCustomScenarioLayer) {
+                earthquakeCustomScenarioLayer.watch("visible", () =>
+                    handleLayerVisibilityChange(earthquakeCustomScenarioLayer)
+                );
             }
         };
 
@@ -65,7 +82,7 @@ const CustomLayerList = ({ view, onLayerSelect, earthquakeM6Layer, earthquakeM7L
         if (view.ready) {
             createAndAddWidgets();
         } else {
-            const watchHandle = view.watch('ready', (isReady) => {
+            const watchHandle = view.watch("ready", (isReady) => {
                 if (isReady) {
                     createAndAddWidgets();
                     watchHandle.remove();
@@ -85,7 +102,13 @@ const CustomLayerList = ({ view, onLayerSelect, earthquakeM6Layer, earthquakeM7L
                 layerListRef.current.destroy();
             }
         };
-    }, [view, onLayerSelect, earthquakeM6Layer, earthquakeM7Layer]);
+    }, [
+        view,
+        onLayerSelect,
+        earthquakeM6Layer,
+        earthquakeM7Layer,
+        earthquakeCustomScenarioLayer,
+    ]);
 
     return null;
 };
