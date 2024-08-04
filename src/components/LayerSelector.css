@@ -28,7 +28,6 @@
 .filter-item:hover {
 	background-color: #f8f8f8;
 }
-
 .filter-item.selected {
 	border-color: #6dacee;
 	background-color: #e6f2ff;
