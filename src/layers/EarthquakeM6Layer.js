@@ -113,6 +113,7 @@ const renderer = new UniqueValueRenderer({
 const earthquakeM6Layer = new FeatureLayer({
     id: "earthquakeM6Layer",
     url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/Model_Deep_Earthquake_M6_8__Nisqually_2001/FeatureServer/4",
+    title: "Seattle Earthquake M6",
     visible: false,
     listMode: "show",
     renderer: renderer,

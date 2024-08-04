@@ -7,6 +7,9 @@ import earthquakeM6Layer from "./EarthquakeM6Layer.js";
 import earthquakeM7Layer from "./EarthquakeM7Layer.js";
 import cityLightLineLayer from "./CityLightLineLayer.js";
 import neighborhoodLayer from "./NeighborhoodLayer.js";
+import dWWMainlinesLayer from "./DWWMainlines.js";
+import privateSchoolsLayer from "./PrivateSchoolsLayer.js";
+import publicSchoolsLayer from "./PublicSchoolsLayer.js";
 
 export {
     hospitalLayer,
@@ -17,5 +20,8 @@ export {
     earthquakeM6Layer,
     earthquakeM7Layer,
     cityLightLineLayer,
-    neighborhoodLayer
+    neighborhoodLayer,
+    dWWMainlinesLayer,
+    privateSchoolsLayer,
+    publicSchoolsLayer,
 };

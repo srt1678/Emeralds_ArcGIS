@@ -112,6 +112,7 @@ const renderer = new UniqueValueRenderer({
 const earthquakeM7Layer = new FeatureLayer({
     id: "earthquakeM7Layer",
     url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/SeattleFault_M72/FeatureServer/5",
+    title: "Seattle Earthquake M7",
     visible: false,
     listMode: "show",
     // renderer: renderer,

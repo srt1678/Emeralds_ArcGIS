@@ -10,6 +10,9 @@ import {
     earthquakeM7Layer,
     hospitalLayer,
     fireStationLayer,
+    dWWMainlinesLayer,
+    privateSchoolsLayer,
+    publicSchoolsLayer
 } from "../layers";
 
 const allLayersConfig = {
@@ -22,6 +25,9 @@ const allLayersConfig = {
     earthquakeM7Layer,
     hospitalLayer,
     fireStationLayer,
+    dWWMainlinesLayer,
+    privateSchoolsLayer,
+    publicSchoolsLayer
 };
 
 export default allLayersConfig;
