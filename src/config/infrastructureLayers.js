@@ -1,5 +1,10 @@
 // infrastructureLayers.js
-import { hospitalLayer, fireStationLayer } from "../layers";
+import {
+    hospitalLayer,
+    fireStationLayer,
+    privateSchoolsLayer,
+    publicSchoolsLayer,
+} from "../layers";
 
 export const infrastructureLayers = {
     hospitalLayer: {
@@ -10,5 +15,12 @@ export const infrastructureLayers = {
         layer: fireStationLayer,
         name: "Fire Stations",
     },
-    // Add more layers here
+    privateSchoolsLayer: {
+        layer: privateSchoolsLayer,
+        name: "Private Schools",
+    },
+    publicSchoolsLayer: {
+        layer: publicSchoolsLayer,
+        name: "Public Schools"
+    }
 };

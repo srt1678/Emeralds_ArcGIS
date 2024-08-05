@@ -10,6 +10,7 @@ import neighborhoodLayer from "./NeighborhoodLayer.js";
 import dWWMainlinesLayer from "./DWWMainlines.js";
 import privateSchoolsLayer from "./PrivateSchoolsLayer.js";
 import publicSchoolsLayer from "./PublicSchoolsLayer.js";
+import earthquakeCustomScenarioLayer from "./EarthquakeCustomScenarioLayer.js";
 
 export {
     hospitalLayer,
@@ -24,4 +25,6 @@ export {
     dWWMainlinesLayer,
     privateSchoolsLayer,
     publicSchoolsLayer,
+    earthquakeCustomScenarioLayer
+    
 };

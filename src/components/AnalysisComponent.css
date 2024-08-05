@@ -14,17 +14,20 @@
 	overflow: hidden;
 	max-height: calc(60%);
 }
+
 .analysis-title {
 	text-align: center;
 	font-size: 18px;
 	font-weight: bold;
 }
+
 .sort-buttons-container {
 	height: 30px;
 	margin-bottom: 20px;
 	display: flex;
 	justify-content: center;
 }
+
 .sort-buttons {
 	height: 30px;
 	margin: 5px;
@@ -33,11 +36,28 @@
 	border-radius: 4px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .sort-buttons:hover,
 .find-closest-infrastructure-button:hover {
 	background-color: #f3f3f3;
 	cursor: pointer;
 }
+
+.zoom-to-feature-button {
+	height: 30px;
+	margin: 5px;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 4px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.zoom-to-feature-button:hover {
+    background-color: #f3f3f3;
+}
+
 .no-infrastructure-text {
 	margin-top: 20px;
 	margin-bottom: 15px;
@@ -45,6 +65,7 @@
 	font-size: 14px;
 	font-weight: bold;
 }
+
 .analysis ul {
 	list-style-type: none;
 	padding: 0;
@@ -52,6 +73,7 @@
 	overflow-y: auto;
 	max-height: calc(100% - 40px);
 }
+
 .analysis li {
 	margin-bottom: 10px;
 	padding: 10px;
@@ -60,10 +82,12 @@
 	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 	font-size: 15px;
 }
+
 .find-closest-infrastructure-container {
 	display: flex;
 	justify-content: center;
 }
+
 .find-closest-infrastructure-button {
 	height: 30px;
 	margin: 5px;

@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import "./AnalysisComponent.css";
 import { findClosestFacilities } from "../utils/ClosestFacilityService";
-import { fireStationLayer } from "../layers";
 import { infrastructureLayers } from "../config/infrastructureLayers";
 import ClearRouteButton from "./ClearRouteButton";
 
@@ -11,10 +10,11 @@ const AnalysisComponent = ({
     title,
     populationData,
     targetInfra,
+    onZoomToFeature,
 }) => {
     const [sortBy, setSortBy] = useState("damage");
     const [analysisResults, setAnalysisResults] = useState({});
-
+    console.log(JSON.stringify(featuresUnderDamage, null, 2));
     // Sort features
     const sortedFeatures = useMemo(() => {
         if (!featuresUnderDamage) return [];
@@ -58,58 +58,82 @@ const AnalysisComponent = ({
         <div className="analysis">
             <div className="analysis-title">{title}</div>
             <div className="sort-buttons-container">
-                <button className="sort-buttons" onClick={() => setSortBy("damage")}>
+                <button
+                    className="sort-buttons"
+                    onClick={() => setSortBy("damage")}
+                >
                     Sort by Damage Level
                 </button>
-                <button className="sort-buttons" onClick={() => setSortBy("population")}>
+                <button
+                    className="sort-buttons"
+                    onClick={() => setSortBy("population")}
+                >
                     Sort by Population
                 </button>
             </div>
             {sortedFeatures.length === 0 ? (
-                <div className="no-infrastructure-text">No {title.toLowerCase()} under damage.</div>
+                <div className="no-infrastructure-text">
+                    No {title.toLowerCase()} under damage.
+                </div>
             ) : (
                 <>
-                <ul>
-                    {sortedFeatures.map((item, index) => {
-                        const populationInfo = populationData.find(
-                            (p) =>
-                                p.feature.feature.OBJECTID ===
-                                item.feature.OBJECTID
-                        );
-                        const analysisResult =
-                            analysisResults[item.feature.OBJECTID];
-                        return (
-                            <li key={index}>
-                                <strong>
-                                    {item.feature.FACILITY || item.feature.NAME}
-                                </strong>
-                                <br />
-                                Damage Level: {item.damage}
-                                <br />
-                                Address: {item.feature.ADDRESS || "N/A"}
-                                <br />
-                                Population With In the Block:{" "}
-                                {populationInfo
-                                    ? populationInfo.population.toLocaleString()
-                                    : "Loading..."}
-                                <br />
-                                <div className="find-closest-infrastructure-container">
-                                <button
-                                    className="find-closest-infrastructure-button"
-                                    onClick={() =>
-                                        handleClosestFacilityAnalysis(item)
-                                    }
-                                >
-                                    Find Closest{" "}
-                                    {infrastructureLayers[targetInfra]?.name ||
-                                        "Facilities"}
-                                </button>
-                                </div>
-                            </li>
-                        );
-                    })}
-                </ul>
-                <ClearRouteButton />
+                    <ul>
+                        {sortedFeatures.map((item, index) => {
+                            const populationInfo = populationData.find(
+                                (p) =>
+                                    p.feature.feature.OBJECTID ===
+                                    item.feature.OBJECTID
+                            );
+                            const analysisResult =
+                                analysisResults[item.feature.OBJECTID];
+                            return (
+                                <li key={index}>
+                                    <strong>
+                                        {item.feature.FACILITY ||
+                                            item.feature.NAME}
+                                    </strong>
+                                    <br />
+                                    Damage Level: {item.damage}
+                                    <br />
+                                    Address: {item.feature.ADDRESS || "N/A"}
+                                    <br />
+                                    Population With In the Block:{" "}
+                                    {populationInfo
+                                        ? populationInfo.population.toLocaleString()
+                                        : "Loading..."}
+                                    <br />
+                                    <div className="find-closest-infrastructure-container">
+                                        <button
+                                            className="find-closest-infrastructure-button"
+                                            onClick={() =>
+                                                handleClosestFacilityAnalysis(
+                                                    item
+                                                )
+                                            }
+                                        >
+                                            Find Closest{" "}
+                                            {infrastructureLayers[targetInfra]
+                                                ?.name || "Facilities"}
+                                        </button>
+                                        <button
+                                            className="zoom-to-feature-button"
+                                            onClick={() =>
+                                                onZoomToFeature(
+                                                    item.geometry.x,
+                                                    item.geometry.y,
+                                                    item.geometry
+                                                        .spatialReference
+                                                )
+                                            }
+                                        >
+                                            Zoom to Feature
+                                        </button>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    <ClearRouteButton />
                 </>
             )}
         </div>
