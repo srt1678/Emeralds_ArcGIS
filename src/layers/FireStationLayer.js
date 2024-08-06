@@ -18,7 +18,12 @@ const fireStationLayer = new FeatureLayer({
                 ]
             }
         ]
-    }
+    },
+    fields: [
+        { name: "OBJECTID", alias: "ObjectID", type: "oid" },
+        { name: "STNID", alias: "Name", type: "string" },
+        { name: "ADDRESS", alias: "Address", type: "string" }
+    ]
 });
 
 export default fireStationLayer;

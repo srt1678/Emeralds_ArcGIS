@@ -4,6 +4,8 @@ import {
     fireStationLayer,
     privateSchoolsLayer,
     publicSchoolsLayer,
+    dwwPumpStationsLayer,
+    emergencyHubsLayer,
 } from "../layers";
 
 export const infrastructureLayers = {
@@ -21,6 +23,14 @@ export const infrastructureLayers = {
     },
     publicSchoolsLayer: {
         layer: publicSchoolsLayer,
-        name: "Public Schools"
+        name: "Public Schools",
+    },
+    dwwPumpStationsLayer: {
+        layer: dwwPumpStationsLayer,
+        name: "Pump Stations"
+    },
+    emergencyHubsLayer: {
+        layer: emergencyHubsLayer,
+        name: "Emergency Hubs"
     }
 };

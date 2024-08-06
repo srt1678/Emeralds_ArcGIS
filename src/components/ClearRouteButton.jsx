@@ -1,5 +1,5 @@
 import React from "react";
-
+import "../styles.css";
 const ClearRouteButton = ({ clearRoute }) => {
 	// console.log("ClearRouteButton rendered");
 	return (
