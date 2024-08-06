@@ -15,7 +15,8 @@ import {
     publicSchoolsLayer, 
     earthquakeCustomScenarioLayer,
     emergencyHubsLayer,
-    dwwPumpStationsLayer
+    dwwPumpStationsLayer,
+    liquefactionZonesLayer
 } from "../layers";
 
 const allLayersConfig = {
@@ -33,7 +34,8 @@ const allLayersConfig = {
     publicSchoolsLayer,
     earthquakeCustomScenarioLayer,
     emergencyHubsLayer,
-    dwwPumpStationsLayer
+    dwwPumpStationsLayer,
+    liquefactionZonesLayer
 };
 
 export default allLayersConfig;

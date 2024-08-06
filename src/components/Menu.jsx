@@ -218,7 +218,7 @@ const Menu = ({
                                 Custom scenario area defined. You can now
                                 perform analysis.
                             </p>
-                            <button onClick={() => applyFilter([])}>
+                            <button onClick={() => applyFilter([])} className="queryFeaturesButton">
                                 Query Features Under Custom Scenario
                             </button>
                         </>

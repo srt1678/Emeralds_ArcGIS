@@ -90,12 +90,19 @@ const AnalysisComponent = ({
                                 <li key={index}>
                                     <strong>
                                         {item.feature.FACILITY ||
-                                            item.feature.NAME}
+                                            item.feature.NAME || 
+                                            item.feature.STNID || 
+                                            item.feature.school_name
+                                        }
                                     </strong>
                                     <br />
-                                    Damage Level: {item.damage}
+                                    Damage Level: {item.damage || "N/A"}
                                     <br />
-                                    Address: {item.feature.ADDRESS || "N/A"}
+                                    Address: {item.feature.ADDRESS || 
+                                                item.feature.address || 
+                                                item.feature.SCHOOL_STREET_ADDRESS || 
+                                                "N/A"
+                                            }
                                     <br />
                                     Population With In the Block:{" "}
                                     {populationInfo
@@ -133,7 +140,7 @@ const AnalysisComponent = ({
                             );
                         })}
                     </ul>
-                    <ClearRouteButton />
+                    <ClearRouteButton view={view}/>
                 </>
             )}
         </div>
