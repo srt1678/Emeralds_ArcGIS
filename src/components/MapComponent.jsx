@@ -7,6 +7,7 @@ import allLayersConfig from "../config/allLayersConfig";
 import LegendComponent from "./LegendComponent";
 import "../styles.css";
 import "./SearchBar.css";
+import { loadPowerStationLayer } from "../layers/PowerStationLayer";
 
 const MapComponent = ({ view, setView }) => {
     const mapRef = useRef(null);
@@ -43,6 +44,12 @@ const MapComponent = ({ view, setView }) => {
                 console.log("View is ready");
                 viewRef.current = newView;
                 setView(newView);
+
+                loadPowerStationLayer().then(powerStationLayer => {
+                    map.add(powerStationLayer);
+                }).catch(error => {
+                    console.error("Error loading power station layer:", error);
+                });
             })
             .catch((error) => {
                 console.error("Error in view.when():", error);

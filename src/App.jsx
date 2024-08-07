@@ -28,26 +28,13 @@ const App = () => {
         }
     };
 
-    // const handleFilterChange = async (earthquakeLayer, filterField, values) => {
-    // 	setSelectedValues(values);
-    // 	if (sourceInfra) {
-    // 		const features = await queryFeaturesUnderDamage(
-    // 			earthquakeLayer,
-    // 			infrastructureLayers[sourceInfra].layer,
-    // 			values,
-    // 			filterField,
-    // 			neighborhoodGeometries
-    // 		);
-    // 		setFeaturesUnderDamage(features);
-    // 	}
-    // };
     const handleFilterChange = async (
         earthquakeLayer,
         filterField,
         values,
         customGeometry
     ) => {
-		console.log(customGeometry);
+		// console.log(customGeometry);
         setSelectedValues(values);
         if (sourceInfra) {
             const features = await queryFeaturesUnderDamage(

@@ -9,19 +9,15 @@ import {
     highlightArea,
 } from "../utils/HighlightService";
 import "../styles.css";
-import Graphic from "@arcgis/core/Graphic";
-import {
-    addressToLocations,
-    locationToAddress,
-} from "@arcgis/core/rest/locator";
+
 import { queryPopulation } from "../utils/PopulationService";
 import { earthquakeScenarioModes } from "../config/earthquakeSenarioModes";
-import { infrastructureLayers } from "../config/infrastructureLayers";
 import { earthquakeCustomScenarioLayer } from "../layers";
 import Sketch from "@arcgis/core/widgets/Sketch";
 import Menu from "./Menu";
-import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import * as projection from "@arcgis/core/geometry/projection";
 import Point from "@arcgis/core/geometry/Point";
 
@@ -42,6 +38,7 @@ const MapWrapper = ({
     const [populationData, setPopulationData] = useState([]);
     const [activeLayer, setActiveLayer] = useState(null);
     const [showAdvanceSelection, setShowAdvanceSelection] = useState(false);
+    const [showAnalysis, setShowAnalysis] = useState(true);
 
     // custom earthqukae scenarios
     const [sketchWidget, setSketchWidget] = useState(null);
@@ -272,6 +269,14 @@ const MapWrapper = ({
                                             onFilterChange={applyFilter}
                                         />
                                     )}
+                                    <AnalysisComponent
+                                    view={view}
+                                    featuresUnderDamage={featuresUnderDamage}
+                                    title={getTitle()}
+                                    populationData={populationData}
+                                    targetInfra={targetInfra}
+                                    onZoomToFeature={handleZoomToFeature}
+                                />
                                 </div>
                                 <div
                                     className="advance-selection-toggle"
@@ -287,14 +292,7 @@ const MapWrapper = ({
                                         <MdKeyboardDoubleArrowRight />
                                     )}
                                 </div>
-                                <AnalysisComponent
-                                    view={view}
-                                    featuresUnderDamage={featuresUnderDamage}
-                                    title={getTitle()}
-                                    populationData={populationData}
-                                    targetInfra={targetInfra}
-                                    onZoomToFeature={handleZoomToFeature}
-                                />
+                                
                             </div>
                         </div>
                     </>
@@ -326,13 +324,23 @@ const MapWrapper = ({
                                         }
                                         applyFilter={applyFilter}
                                     />
-                                    <br />
                                     {!isCustomScenario && (
                                         <LayerSelector
                                             layer={activeLayer}
                                             onFilterChange={applyFilter}
                                         />
                                     )}
+                                    <br />
+                                    <AnalysisComponent
+                                        view={view}
+                                        featuresUnderDamage={
+                                            featuresUnderDamage
+                                        }
+                                        title={getTitle()}
+                                        populationData={populationData}
+                                        targetInfra={targetInfra}
+                                        onZoomToFeature={handleZoomToFeature}
+                                    />
                                 </div>
                                 <div
                                     className="advance-selection-toggle"
@@ -347,15 +355,8 @@ const MapWrapper = ({
                                     ) : (
                                         <MdKeyboardDoubleArrowRight />
                                     )}
+                                    
                                 </div>
-                                <AnalysisComponent
-                                    view={view}
-                                    featuresUnderDamage={featuresUnderDamage}
-                                    title={getTitle()}
-                                    populationData={populationData}
-                                    targetInfra={targetInfra}
-                                    onZoomToFeature={handleZoomToFeature}
-                                />
                             </div>
                         </div>
                     </>

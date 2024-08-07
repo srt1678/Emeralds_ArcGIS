@@ -1,12 +1,12 @@
 import React from "react";
 
-const ClearRouteButton = ({ view }) => {
-	// console.log("ClearRouteButton rendered");
+import "../styles.css";
+const ClearRouteButton = ({ clearRoute }) => {
 	return (
 		<button
 			onClick={() => {
 				console.log("Clear Route button clicked");
-				view.graphics.removeAll();
+				clearRoute();
 			}}
 			className="clear-route-button"
 		>
