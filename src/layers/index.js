@@ -13,6 +13,7 @@ import publicSchoolsLayer from "./PublicSchoolsLayer.js";
 import earthquakeCustomScenarioLayer from "./EarthquakeCustomScenarioLayer.js";
 import emergencyHubsLayer from "./EmergencyHubsLayer.js";
 import dwwPumpStationsLayer from "./DWWPumpStationsLayer.js";
+import liquefactionZonesLayer from "./LiquefactionZonesLayer.js";
 
 export {
     hospitalLayer,
@@ -29,5 +30,6 @@ export {
     publicSchoolsLayer,
     earthquakeCustomScenarioLayer,
     emergencyHubsLayer,
-    dwwPumpStationsLayer
+    dwwPumpStationsLayer,
+    liquefactionZonesLayer
 };

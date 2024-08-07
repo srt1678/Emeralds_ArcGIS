@@ -52,7 +52,7 @@ export async function loadPowerStationLayer() {
 				type: "simple",
 				symbol: {
 					type: "simple-marker",
-					color: "purple",
+					color: "green",
 					size: 8,
 					outline: {
 						color: "white",

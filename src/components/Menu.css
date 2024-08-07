@@ -27,3 +27,16 @@
 .custom-scenario-title{
 	margin-top: 25px;
 }
+
+.queryFeaturesButton{
+	height: 30px;
+	margin: 5px;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 4px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.queryFeaturesButton:hover{
+	background-color: #f3f3f3;
+	cursor: pointer;
+}
