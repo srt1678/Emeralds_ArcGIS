@@ -1,4 +1,4 @@
-.menu-title {
+.menu-title, .custom-scenario-title {
 	text-align: center;
 	font-size: 18px;
 	font-weight: bold;
@@ -23,4 +23,7 @@
 }
 .basic-multi-select .select__menu {
 	z-index: 1001;
+}
+.custom-scenario-title{
+	margin-top: 25px;
 }

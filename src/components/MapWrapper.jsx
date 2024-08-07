@@ -269,6 +269,14 @@ const MapWrapper = ({
                                             onFilterChange={applyFilter}
                                         />
                                     )}
+                                    <AnalysisComponent
+                                    view={view}
+                                    featuresUnderDamage={featuresUnderDamage}
+                                    title={getTitle()}
+                                    populationData={populationData}
+                                    targetInfra={targetInfra}
+                                    onZoomToFeature={handleZoomToFeature}
+                                />
                                 </div>
                                 <div
                                     className="advance-selection-toggle"
@@ -284,14 +292,7 @@ const MapWrapper = ({
                                         <MdKeyboardDoubleArrowRight />
                                     )}
                                 </div>
-                                <AnalysisComponent
-                                    view={view}
-                                    featuresUnderDamage={featuresUnderDamage}
-                                    title={getTitle()}
-                                    populationData={populationData}
-                                    targetInfra={targetInfra}
-                                    onZoomToFeature={handleZoomToFeature}
-                                />
+                                
                             </div>
                         </div>
                     </>
@@ -323,13 +324,23 @@ const MapWrapper = ({
                                         }
                                         applyFilter={applyFilter}
                                     />
-                                    <br />
                                     {!isCustomScenario && (
                                         <LayerSelector
                                             layer={activeLayer}
                                             onFilterChange={applyFilter}
                                         />
                                     )}
+                                    <br />
+                                    <AnalysisComponent
+                                        view={view}
+                                        featuresUnderDamage={
+                                            featuresUnderDamage
+                                        }
+                                        title={getTitle()}
+                                        populationData={populationData}
+                                        targetInfra={targetInfra}
+                                        onZoomToFeature={handleZoomToFeature}
+                                    />
                                 </div>
                                 <div
                                     className="advance-selection-toggle"
@@ -344,48 +355,7 @@ const MapWrapper = ({
                                     ) : (
                                         <MdKeyboardDoubleArrowRight />
                                     )}
-                                </div>
-                                {/* <AnalysisComponent
-                                    view={view}
-                                    featuresUnderDamage={featuresUnderDamage}
-                                    title={getTitle()}
-                                    populationData={populationData}
-                                    targetInfra={targetInfra}
-                                    onZoomToFeature={handleZoomToFeature}
-                                /> */}
-                            </div>
-                        </div>
-                        <div className="analysis-container">
-                            <div
-                                className={
-                                    showAnalysis
-                                        ? "analysis-visible"
-                                        : "analysis-hidden"
-                                }
-                            >
-                                <div className="analysis-content">
-                                    <AnalysisComponent
-                                        view={view}
-                                        featuresUnderDamage={
-                                            featuresUnderDamage
-                                        }
-                                        title={getTitle()}
-                                        populationData={populationData}
-                                        targetInfra={targetInfra}
-                                        onZoomToFeature={handleZoomToFeature}
-                                    />
-                                </div>
-                                <div
-                                    className="analysis-toggle"
-                                    onClick={() =>
-                                        setShowAnalysis(!showAnalysis)
-                                    }
-                                >
-                                    {showAnalysis ? (
-                                        <MdKeyboardArrowRight />
-                                    ) : (
-                                        <MdKeyboardArrowLeft />
-                                    )}
+                                    
                                 </div>
                             </div>
                         </div>

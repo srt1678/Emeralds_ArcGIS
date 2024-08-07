@@ -84,9 +84,10 @@ const AnalysisComponent = ({
     return (
         <div className="analysis">
             <div className="analysis-title">{title}</div>
+            <div className="section-divider"></div>
             {sortedFeatures.length === 0 ? (
                 <div className="no-infrastructure-text">
-                    No {title.toLowerCase()} under damage.
+                    No {title.toLowerCase()}.
                 </div>
             ) : (
                 <>
@@ -109,7 +110,7 @@ const AnalysisComponent = ({
                             </div>
                             <div className="parameter-control">
                                 <label htmlFor="travelTime">
-                                    Travel Time (minutes):
+                                    Travel Time (min):
                                 </label>
                                 <input
                                     type="number"

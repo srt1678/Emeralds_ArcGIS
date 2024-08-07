@@ -1,13 +1,17 @@
+.analysis{
+    margin-right: 10px;
+    background-color: white;
+}
 .analysis-title {
     text-align: center;
     font-size: 20px;
     font-weight: bold;
-    margin-bottom: 15px;
 }
 
 .analysis-parameters-container {
     max-height: 250px;
     overflow-y: auto;
+    margin-top: 20px;
     margin-bottom: 20px;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
@@ -32,14 +36,15 @@
 }
 
 .parameter-control label {
-    flex: 2;
+    flex: 0 0 auto;
     font-size: 14px;
     margin-right: 10px;
 }
 
 .parameter-control input[type="number"],
 .parameter-control select {
-    flex: 1;
+    flex: 0 0 auto;
+    width: 100px;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;

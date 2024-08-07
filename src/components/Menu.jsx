@@ -124,7 +124,8 @@ const Menu = ({
             </div>
             {isCustomScenario && (
                 <div className="custom-scenario-container">
-                    <h3>Custom Earthquake Scenario</h3>
+                    <div className="custom-scenario-title">Custom Earthquake Scenario</div>
+                    <div className="section-divider"></div>
                     {!isCustomSketchComplete ? (
                         <p>
                             Use the sketch tools to draw your custom earthquake
