@@ -1,4 +1,3 @@
-
 import { queryEarthquakeFeatures } from "./EarthquakeService";
 import { intersects } from "@arcgis/core/geometry/geometryEngine";
 import * as projection from "@arcgis/core/geometry/projection";
@@ -16,6 +15,13 @@ export const queryFeaturesUnderDamage = async (
         // Ensure the projection module is loaded
         await projection.load();
 
+        // Check if damageValues is null, undefined, or an empty array
+        if (damageValues == null || damageValues.length === 0) {
+            console.log("No damage values provided, skipping query.");
+            return [];
+        }
+        // console.log(JSON.stringify(infraLayer, null, 2));
+
         let featuresUnderDamage = [];
 
         // Query infrastructure features
@@ -27,7 +33,8 @@ export const queryFeaturesUnderDamage = async (
 
         if (customGeometry) {
             // Reproject customGeometry to match the spatial reference of infra features
-            const targetSpatialReference = infraFeatures.features[0].geometry.spatialReference;
+            const targetSpatialReference =
+                infraFeatures.features[0].geometry.spatialReference;
             const reprojectedCustomGeometry = projection.project(
                 customGeometry,
                 targetSpatialReference
@@ -35,7 +42,9 @@ export const queryFeaturesUnderDamage = async (
 
             // For custom scenario, use the reprojected custom geometry directly
             infraFeatures.features.forEach((infraFeature) => {
-                if (intersects(reprojectedCustomGeometry, infraFeature.geometry)) {
+                if (
+                    intersects(reprojectedCustomGeometry, infraFeature.geometry)
+                ) {
                     featuresUnderDamage.push({
                         feature: infraFeature.attributes,
                         geometry: infraFeature.geometry,
@@ -50,9 +59,12 @@ export const queryFeaturesUnderDamage = async (
                 damageField,
                 neighborhoodGeometries
             );
-
+            // console.log(JSON.stringify(infraFeatures, null, 2))
+            
             earthquakeFeatures.forEach((earthquakeFeature) => {
                 infraFeatures.features.forEach((infraFeature) => {
+                    // console.log(JSON.stringify(infraFeature.geometry))
+                    if (infraFeature.geometry === null) return;
                     if (
                         intersects(
                             earthquakeFeature.geometry,

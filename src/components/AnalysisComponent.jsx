@@ -57,7 +57,7 @@ const AnalysisComponent = ({
                 10, // bufferDistance, useless for now
                 avoidHighways,
                 travelMode,
-                // impedanceAttribute
+                impedanceAttribute
             );
             setAnalysisResults((prev) => ({
                 ...prev,
@@ -166,9 +166,6 @@ const AnalysisComponent = ({
                                     }
                                 >
                                     <option value="TravelTime">Time</option>
-                                    <option value="Miles">
-                                        Distance (Miles)
-                                    </option>
                                     <option value="Kilometers">
                                         Distance (Kilometers)
                                     </option>

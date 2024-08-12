@@ -4,7 +4,7 @@ import CustomLayerList from "./CustomLayerList";
 import AnalysisComponent from "./AnalysisComponent";
 import LayerSelector from "./LayerSelector";
 import {
-    clearHighlights,
+    clearCurrentHighlights,
     highlightFeature,
     highlightArea,
 } from "../utils/HighlightService";
@@ -48,8 +48,11 @@ const MapWrapper = ({
 
     // highlighting features and fetching population data
     useEffect(() => {
+        if (view && featuresUnderDamage.length == 0) {
+            clearCurrentHighlights(view); 
+        }
         if (view && featuresUnderDamage && featuresUnderDamage.length > 0) {
-            // clearHighlights(view);
+            clearCurrentHighlights(view);
             featuresUnderDamage.forEach((feature, index) => {
                 highlightFeature(view, feature);
             });
@@ -72,7 +75,7 @@ const MapWrapper = ({
     // highlighting neighborhood geometries
     useEffect(() => {
         if (view) {
-            clearHighlights(view);
+            clearCurrentHighlights(view);
             if (neighborhoodGeometries && neighborhoodGeometries.length > 0) {
                 neighborhoodGeometries.forEach((neighborhood) => {
                     highlightArea(view, neighborhood);
@@ -123,8 +126,9 @@ const MapWrapper = ({
 
     // Get analysis title
     const getTitle = () => {
+        let len = featuresUnderDamage.length;
         if (sourceInfra && infrastructureLayers[sourceInfra]) {
-            return `${infrastructureLayers[sourceInfra].name} Under Damage`;
+            return `${len} ${infrastructureLayers[sourceInfra].name} Under Damage`;
         }
         return "Infrastructure Under Damage";
     };

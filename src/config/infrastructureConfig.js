@@ -4,7 +4,7 @@ import { hospitalLayer, fireStationLayer } from "../layers";
 export const infrastructureTypes = {
     hospital: {
         layer: hospitalLayer,
-        name: "Hospital",
+        name: "Hospitals",
         symbol: {
             type: "simple-marker",
             color: [255, 0, 0],
@@ -13,7 +13,7 @@ export const infrastructureTypes = {
     },
     fireStation: {
         layer: fireStationLayer,
-        name: "Fire Station",
+        name: "Fire Stations",
         symbol: {
             type: "simple-marker",
             color: [0, 255, 0],

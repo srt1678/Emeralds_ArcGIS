@@ -16,7 +16,13 @@ const MapComponent = ({ view, setView }) => {
     const viewRef = useRef(null);
     const visibleLayers = Object.values(allLayersConfig);
     const [isLegendVisible, setIsLegendVisible] = useState(false);
-    
+
+    const clearGraphics = () => {
+        if (viewRef.current) {
+            viewRef.current.graphics.removeAll();
+        }
+    };
+
     useEffect(() => {
         console.log("MapComponent useEffect called");
         if (!mapRef.current) {
@@ -45,11 +51,16 @@ const MapComponent = ({ view, setView }) => {
                 viewRef.current = newView;
                 setView(newView);
 
-                loadPowerStationLayer().then(powerStationLayer => {
-                    map.add(powerStationLayer);
-                }).catch(error => {
-                    console.error("Error loading power station layer:", error);
-                });
+                loadPowerStationLayer()
+                    .then((powerStationLayer) => {
+                        map.add(powerStationLayer);
+                    })
+                    .catch((error) => {
+                        console.error(
+                            "Error loading power station layer:",
+                            error
+                        );
+                    });
             })
             .catch((error) => {
                 console.error("Error in view.when():", error);
@@ -64,9 +75,18 @@ const MapComponent = ({ view, setView }) => {
             locationEnabled: false,
         });
 
-        newView.ui.add(searchWidget, {
-            position: "top-right",
-        });
+        // Clear graphics button
+        const clearButton = document.createElement('button');
+        clearButton.innerHTML = `
+            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M5.662 23l-5.369-5.365c-.195-.195-.293-.45-.293-.707 0-.256.098-.512.293-.707l14.929-14.928c.195-.194.451-.293.707-.293.255 0 .512.099.707.293l7.071 7.073c.196.195.293.451.293.708 0 .256-.097.511-.293.707l-11.216 11.219h5.514v2h-12.343zm3.657-2l-5.486-5.486-1.419 1.414 4.076 4.072h2.829zm6.605-17.581l-10.677 10.68 5.658 5.659 10.676-10.682-5.657-5.657z"/></svg>
+        `;
+        clearButton.title = 'Clear Graphics';
+        clearButton.className = 'custom-clear-button';
+        clearButton.addEventListener('click', clearGraphics);
+
+        // Add search widget and clear button to the UI
+        newView.ui.add(searchWidget, "top-right");
+        newView.ui.add(clearButton, "top-right");
 
         return () => {
             if (viewRef.current) {
