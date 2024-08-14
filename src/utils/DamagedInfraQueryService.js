@@ -14,12 +14,15 @@ export const queryFeaturesUnderDamage = async (
     try {
         // Ensure the projection module is loaded
         await projection.load();
-
+        // console.log(earthquakeLayer.title)
         // Check if damageValues is null, undefined, or an empty array
-        if (damageValues == null || damageValues.length === 0) {
-            console.log("No damage values provided, skipping query.");
-            return [];
+        if (earthquakeLayer.title != "Custom Earthquake Scenario") {
+            if (damageValues == null || damageValues.length === 0) {
+                console.log("No damage values provided, skipping query.");
+                return [];
+            }
         }
+        
         // console.log(JSON.stringify(infraLayer, null, 2));
 
         let featuresUnderDamage = [];
@@ -30,18 +33,21 @@ export const queryFeaturesUnderDamage = async (
             outFields: ["*"],
             returnGeometry: true,
         });
-
+        
         if (customGeometry) {
             // Reproject customGeometry to match the spatial reference of infra features
             const targetSpatialReference =
                 infraFeatures.features[0].geometry.spatialReference;
+            
             const reprojectedCustomGeometry = projection.project(
                 customGeometry,
                 targetSpatialReference
             );
+            
 
             // For custom scenario, use the reprojected custom geometry directly
             infraFeatures.features.forEach((infraFeature) => {
+                if (infraFeature.geometry === null) return;
                 if (
                     intersects(reprojectedCustomGeometry, infraFeature.geometry)
                 ) {
