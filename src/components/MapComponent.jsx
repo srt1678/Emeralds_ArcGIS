@@ -24,7 +24,7 @@ const MapComponent = ({ view, setView }) => {
     };
 
     useEffect(() => {
-        console.log("MapComponent useEffect called");
+        // console.log("MapComponent useEffect called");
         if (!mapRef.current) {
             console.log("mapRef.current is null");
             return;
@@ -101,7 +101,7 @@ const MapComponent = ({ view, setView }) => {
     }, [setView]);
 
     useEffect(() => {
-        console.log("View prop updated:", view);
+        // console.log("View prop updated:", view);
         if (view && view !== viewRef.current) {
             viewRef.current = view;
         }
