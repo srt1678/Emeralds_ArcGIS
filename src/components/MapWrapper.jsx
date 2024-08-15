@@ -15,7 +15,11 @@ import { earthquakeScenarioModes } from "../config/earthquakeSenarioModes";
 import { earthquakeCustomScenarioLayer } from "../layers";
 import Sketch from "@arcgis/core/widgets/Sketch";
 import Menu from "./Menu";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardDoubleArrowLeft } from "react-icons/md";
+import {
+    MdKeyboardArrowLeft,
+    MdKeyboardArrowRight,
+    MdKeyboardDoubleArrowLeft,
+} from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import * as projection from "@arcgis/core/geometry/projection";
@@ -38,18 +42,71 @@ const MapWrapper = ({
     const [populationData, setPopulationData] = useState([]);
     const [activeLayer, setActiveLayer] = useState(null);
     const [showAdvanceSelection, setShowAdvanceSelection] = useState(false);
-    const [showAnalysis, setShowAnalysis] = useState(true);
+    // const [showAnalysis, setShowAnalysis] = useState(true);
+    const [clearLayersFlag, setClearLayersFlag] = useState(false);
 
-    // custom earthqukae scenarios
+    // Search bar
+    const [searchResult, setSearchResult] = useState(null);
+    const [showSearchMenu, setShowSearchMenu] = useState(false);
+    const [isCustomSearch, setIsCustomSearch] = useState(false);
+
+    // Custom earthqukae scenarios
     const [sketchWidget, setSketchWidget] = useState(null);
     const [isCustomScenario, setIsCustomScenario] = useState(false);
     const [customScenarioGeometry, setCustomScenarioGeometry] = useState(null);
     const [isCustomSketchComplete, setIsCustomSketchComplete] = useState(false);
 
+    // Ckear all states
+    const handleClearAll = useCallback(() => {
+        setShowSearchMenu(false);
+        setIsCustomSearch(false);
+        setFeaturesUnderDamage([]);
+        setActiveLayer(null);
+        setIsCustomScenario(false);
+        setCustomScenarioGeometry(null);
+        setIsCustomSketchComplete(false);
+        // trigger layer clearing in CustomLayerList
+        setClearLayersFlag(true);
+
+        if (view) {
+            // Clear all graphics from the view
+            view.graphics.removeAll();
+
+            // Clear any sketched geometries
+            if (sketchWidget) {
+                sketchWidget.layer.removeAll();
+                view.ui.remove(sketchWidget);
+                setSketchWidget(null);
+            }
+
+            // Clear any highlighted features
+            view.highlightOptions.remove();
+        }
+
+        // Reset the earthquake custom scenario layer if it exists
+        if (earthquakeCustomScenarioLayer) {
+            earthquakeCustomScenarioLayer.removeAll();
+        }
+
+        // Reset all layer visibilities
+        Object.values(earthquakeScenarioModes).forEach(mode => {
+            if (mode.layer) {
+                mode.layer.visible = false;
+            }
+        });
+    }, [view, sketchWidget, setFeaturesUnderDamage]);
+
+    // Reset clearLayersFlag after it's been consumed
+    useEffect(() => {
+        if (clearLayersFlag) {
+            setClearLayersFlag(false);
+        }
+    }, [clearLayersFlag]);
+
     // highlighting features and fetching population data
     useEffect(() => {
         if (view && featuresUnderDamage.length == 0) {
-            clearCurrentHighlights(view); 
+            clearCurrentHighlights(view);
         }
         if (view && featuresUnderDamage && featuresUnderDamage.length > 0) {
             clearCurrentHighlights(view);
@@ -119,7 +176,7 @@ const MapWrapper = ({
                 // console.log("Is custom scenario:", isCustomScenario);
             } else {
                 view.ui.remove(sketchWidget);
-                console.log("Sketch widget removed from view");
+                // console.log("Sketch widget removed from view");
             }
         }
     }, [view, sketchWidget, activeLayer, isCustomScenario]);
@@ -135,16 +192,16 @@ const MapWrapper = ({
 
     // custom
     const handleLayerSelect = (layer) => {
-        console.log("Layer selected:", layer != null);
+        // console.log("Layer selected:", layer != null);
         setActiveLayer(layer);
         setShowAdvanceSelection(true);
         if (layer === earthquakeCustomScenarioLayer) {
-            console.log("Setting custom scenario mode");
+            // console.log("Setting custom scenario mode");
             setIsCustomScenario(true);
             setIsCustomSketchComplete(false);
             setFeaturesUnderDamage([]);
         } else {
-            console.log("Exiting custom scenario mode");
+            // console.log("Exiting custom scenario mode");
             // When activeLayer is null
             setIsCustomScenario(false);
             if (view && sketchWidget) {
@@ -176,6 +233,59 @@ const MapWrapper = ({
         }
     };
 
+    // Search
+    const handleSearchComplete = useCallback(
+        (result) => {
+            setSearchResult(result);
+            if (result && result.feature && result.feature.geometry) {
+                // console.log("Search completed in MapWrapper:", result.name);
+                setShowSearchMenu(true); // Show the menu when there's a valid search result
+                setIsCustomSearch(true);
+                try {
+                    const point = new Point({
+                        x: result.feature.geometry.x,
+                        y: result.feature.geometry.y,
+                        spatialReference:
+                            result.feature.geometry.spatialReference,
+                    });
+
+                    // console.log("Created Point geometry:", point);
+
+                    if (view) {
+                        view.goTo({
+                            target: point,
+                            zoom: 5,
+                        }).catch((error) => {
+                            if (error.name !== "AbortError") {
+                                console.error("Error in view.goTo():", error);
+                            }
+                        });
+                    } else {
+                        console.warn(
+                            "View is not available for zooming to the search result."
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error processing search result:", error);
+                }
+            } else {
+                console.log("Search result does not contain valid geometry.");
+                setShowSearchMenu(false);
+                setIsCustomSearch(false);
+            }
+        },
+        [view]
+    );
+
+    // Handle menu visibility
+    useEffect(() => {
+        if (searchResult && showSearchMenu) {
+            setShowAdvanceSelection(true);
+        } else if (!activeLayer && !isCustomScenario) {
+            setShowAdvanceSelection(false);
+        }
+    }, [searchResult, showSearchMenu, activeLayer, isCustomScenario]);
+
     const handleZoomToFeature = useCallback(
         async (x, y, spatialReference) => {
             if (view) {
@@ -202,7 +312,7 @@ const MapWrapper = ({
                     // Zoom to the reprojected point
                     view.goTo({
                         target: reprojectedPoint,
-                        zoom: 15, // Adjust this value as needed
+                        zoom: 15,
                     }).catch((error) => {
                         if (error.name !== "AbortError") {
                             console.error("Error in view.goTo():", error);
@@ -221,7 +331,12 @@ const MapWrapper = ({
     return (
         <div className="map-wrapper">
             <div className="map-container">
-                <MapComponent view={view} setView={setView} />
+                <MapComponent
+                    view={view}
+                    setView={setView}
+                    onSearchComplete={handleSearchComplete}
+                    onClearAll={handleClearAll}
+                />
                 {view && (
                     <CustomLayerList
                         view={view}
@@ -236,9 +351,70 @@ const MapWrapper = ({
                             earthquakeScenarioModes.earthquakeCustomScenarioMode
                                 .layer
                         }
+                        clearLayersFlag={clearLayersFlag}
                     />
                 )}
 
+                {/* Search Result Menu */}
+                {searchResult && showSearchMenu && (
+                    <div className="advance-selection-container">
+                        <div
+                            className={
+                                showAdvanceSelection
+                                    ? "advance-selection-visible"
+                                    : "advance-selection-nonvisible"
+                            }
+                        >
+                            <div className="advance-selection">
+                                <Menu
+                                    onOptionSelect={handleOptionSelect}
+                                    onSourceInfraSelect={setSourceInfra}
+                                    onTargetInfraSelect={setTargetInfra}
+                                    onNeighborhoodSelect={
+                                        setSelectedNeighborhoods
+                                    }
+                                    infrastructureLayers={infrastructureLayers}
+                                    isCustomScenario={isCustomScenario}
+                                    isCustomSketchComplete={
+                                        isCustomSketchComplete
+                                    }
+                                    isCustomSearch={isCustomSearch}
+                                    applyFilter={applyFilter}
+                                />
+                                <br />
+                                {/* <LayerSelector
+                                    layer={activeLayer}
+                                    onFilterChange={applyFilter}
+                                /> */}
+                                <AnalysisComponent
+                                    view={view}
+                                    featuresUnderDamage={featuresUnderDamage}
+                                    title={"Search"}
+                                    populationData={populationData}
+                                    targetInfra={targetInfra}
+                                    onZoomToFeature={handleZoomToFeature}
+                                    isCustomSearch={isCustomSearch}
+                                    searchResult={searchResult}
+                                />
+                            </div>
+                            <div
+                                className="advance-selection-toggle"
+                                onClick={() =>
+                                    setShowAdvanceSelection(
+                                        !showAdvanceSelection
+                                    )
+                                }
+                            >
+                                {showAdvanceSelection ? (
+                                    <MdKeyboardDoubleArrowLeft />
+                                ) : (
+                                    <MdKeyboardDoubleArrowRight />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {/* Custom Earthquake Scenario */}
                 {activeLayer && isCustomScenario && isCustomSketchComplete && (
                     <>
                         <div className="advance-selection-container">
@@ -274,13 +450,15 @@ const MapWrapper = ({
                                         />
                                     )}
                                     <AnalysisComponent
-                                    view={view}
-                                    featuresUnderDamage={featuresUnderDamage}
-                                    title={getTitle()}
-                                    populationData={populationData}
-                                    targetInfra={targetInfra}
-                                    onZoomToFeature={handleZoomToFeature}
-                                />
+                                        view={view}
+                                        featuresUnderDamage={
+                                            featuresUnderDamage
+                                        }
+                                        title={getTitle()}
+                                        populationData={populationData}
+                                        targetInfra={targetInfra}
+                                        onZoomToFeature={handleZoomToFeature}
+                                    />
                                 </div>
                                 <div
                                     className="advance-selection-toggle"
@@ -296,11 +474,11 @@ const MapWrapper = ({
                                         <MdKeyboardDoubleArrowRight />
                                     )}
                                 </div>
-                                
                             </div>
                         </div>
                     </>
                 )}
+                {/* M6 & M7 Earthquake Scenario */}
                 {activeLayer && !isCustomScenario && (
                     <>
                         <div className="advance-selection-container">
@@ -359,7 +537,6 @@ const MapWrapper = ({
                                     ) : (
                                         <MdKeyboardDoubleArrowRight />
                                     )}
-                                    
                                 </div>
                             </div>
                         </div>

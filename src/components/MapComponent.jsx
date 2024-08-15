@@ -9,10 +9,11 @@ import "../styles.css";
 import "./SearchBar.css";
 import { loadPowerStationLayer } from "../layers/PowerStationLayer";
 
-const MapComponent = ({ view, setView }) => {
+const MapComponent = ({ view, setView,  onSearchComplete, onClearAll }) => {
     const mapRef = useRef(null);
     const legendRef = useRef(null);
-    const searchRef = useRef(null);
+    // const searchRef = useRef(null);
+    const searchWidgetRef = useRef(null);
     const viewRef = useRef(null);
     const visibleLayers = Object.values(allLayersConfig);
     const [isLegendVisible, setIsLegendVisible] = useState(false);
@@ -21,6 +22,11 @@ const MapComponent = ({ view, setView }) => {
         if (viewRef.current) {
             viewRef.current.graphics.removeAll();
         }
+        if (searchWidgetRef.current) {
+            searchWidgetRef.current.clear();
+        }
+        onSearchComplete(null);
+        onClearAll();
     };
 
     useEffect(() => {
@@ -69,10 +75,22 @@ const MapComponent = ({ view, setView }) => {
         newView.ui.remove("zoom");
 
         // Search bar
-        const searchWidget = new Search({
+        searchWidgetRef.current = new Search({
             view: newView,
-            container: searchRef.current,
             locationEnabled: false,
+        });
+        // Add event listener for search-complete
+        searchWidgetRef.current.on("search-complete", (event) => {
+            if (event.results && event.results[0] && event.results[0].results[0]) {
+                const result = event.results[0].results[0];
+                // console.log("Search result address:", result.name);
+                // console.log("Full search result:", result);
+                // Call the callback function with the search result
+                onSearchComplete(result);
+            } else {
+                console.log("No results found or search was cleared");
+                onSearchComplete(null);
+            }
         });
 
         // Clear graphics button
@@ -85,7 +103,7 @@ const MapComponent = ({ view, setView }) => {
         clearButton.addEventListener('click', clearGraphics);
 
         // Add search widget and clear button to the UI
-        newView.ui.add(searchWidget, "top-right");
+        newView.ui.add(searchWidgetRef.current, "top-right");
         newView.ui.add(clearButton, "top-right");
 
         return () => {
@@ -93,9 +111,9 @@ const MapComponent = ({ view, setView }) => {
                 viewRef.current.destroy();
                 viewRef.current = null;
             }
-            if (searchRef.current) {
-                searchRef.current.destroy();
-                searchRef.current = null;
+            if (searchWidgetRef.current) {
+                searchWidgetRef.current.destroy();
+                searchWidgetRef.current = null;
             }
         };
     }, [setView]);

@@ -9,6 +9,7 @@ const CustomLayerList = ({
     earthquakeM6Layer,
     earthquakeM7Layer,
     earthquakeCustomScenarioLayer,
+    clearLayersFlag
 }) => {
     const expandRef = useRef(null);
     const layerListRef = useRef(null);
@@ -109,6 +110,16 @@ const CustomLayerList = ({
         earthquakeM7Layer,
         earthquakeCustomScenarioLayer,
     ]);
+
+    // Effect to handle layer clearing
+    useEffect(() => {
+        if (clearLayersFlag) {
+            if (earthquakeM6Layer) earthquakeM6Layer.visible = false;
+            if (earthquakeM7Layer) earthquakeM7Layer.visible = false;
+            if (earthquakeCustomScenarioLayer) earthquakeCustomScenarioLayer.visible = false;
+            onLayerSelect(null);
+        }
+    }, [clearLayersFlag, earthquakeM6Layer, earthquakeM7Layer, earthquakeCustomScenarioLayer, onLayerSelect]);
 
     return null;
 };

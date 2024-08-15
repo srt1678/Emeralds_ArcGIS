@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from "react";
 import "./AnalysisComponent.css";
-import { findClosestFacilities } from "../utils/ClosestFacilityService";
+import {
+    findClosestFacilities,
+    findClosestFacilitiesWithOutSrc,
+} from "../utils/ClosestFacilityService";
 import { infrastructureLayers } from "../config/infrastructureLayers";
 import ClearRouteButton from "./ClearRouteButton";
 
@@ -11,6 +14,8 @@ const AnalysisComponent = ({
     populationData,
     targetInfra,
     onZoomToFeature,
+    isCustomSearch,
+    searchResult,
 }) => {
     const [sortBy, setSortBy] = useState("damage");
     const [analysisResults, setAnalysisResults] = useState({});
@@ -57,11 +62,39 @@ const AnalysisComponent = ({
                 10, // bufferDistance, useless for now
                 avoidHighways,
                 travelMode,
-                impedanceAttribute
+                impedanceAttribute,
+                isCustomSearch,
+                searchResult
             );
             setAnalysisResults((prev) => ({
                 ...prev,
                 [srcInfra.feature.OBJECTID]: results,
+            }));
+            setCurrentAnalysisGraphics(results.addedGraphics);
+        } catch (error) {
+            console.error("Error in closest facility analysis:", error);
+            alert("An error occurred during the analysis. Please try again.");
+        }
+    };
+
+    const handleClosestFacilityAnalysisForSearch = async () => {
+        try {
+            const results = await findClosestFacilitiesWithOutSrc(
+                null,
+                targetInfra ? infrastructureLayers[targetInfra].layer : null,
+                view,
+                maxFacilities,
+                travelTime,
+                10, // bufferDistance, useless for now
+                avoidHighways,
+                travelMode,
+                impedanceAttribute,
+                isCustomSearch,
+                searchResult
+            );
+            setAnalysisResults((prev) => ({
+                ...prev,
+                [searchResult.feature.OBJECTID]: results,
             }));
             setCurrentAnalysisGraphics(results.addedGraphics);
         } catch (error) {
@@ -85,7 +118,7 @@ const AnalysisComponent = ({
         <div className="analysis">
             <div className="analysis-title">{title}</div>
             <div className="section-divider"></div>
-            {sortedFeatures.length === 0 ? (
+            {sortedFeatures.length === 0 && !isCustomSearch ? (
                 <div className="no-infrastructure-text">
                     No {title.toLowerCase()}.
                 </div>
@@ -146,12 +179,8 @@ const AnalysisComponent = ({
                                         setTravelMode(e.target.value)
                                     }
                                 >
-                                    <option value="Driving">
-                                        Driving
-                                    </option>
-                                    <option value="Walking">
-                                        Walking
-                                    </option>
+                                    <option value="Driving">Driving</option>
+                                    <option value="Walking">Walking</option>
                                 </select>
                             </div>
                             <div className="parameter-control">
@@ -188,7 +217,17 @@ const AnalysisComponent = ({
                             Sort by Population
                         </button>
                     </div>
-                    <ClearRouteButton clearRoute={clearRoute} />
+                    <ClearRouteButton clearRoute={clearRoute} noMargin={true} />
+                    {isCustomSearch && (
+                        <div>
+                            <button
+                                onClick={handleClosestFacilityAnalysisForSearch}
+                                className="search-route-button"
+                            >
+                                Search Route
+                            </button>
+                        </div>
+                    )}
                     <ul>
                         {sortedFeatures.map((item, index) => {
                             const populationInfo = populationData.find(
@@ -202,21 +241,20 @@ const AnalysisComponent = ({
                                 <li key={index}>
                                     <strong>
                                         {item.feature.FACILITY ||
-                                            item.feature.NAME || 
-                                            item.feature.STNID || 
-                                            item.feature.school_name
-                                        }
+                                            item.feature.NAME ||
+                                            item.feature.STNID ||
+                                            item.feature.school_name}
                                     </strong>
                                     <br />
                                     Damage Level: {item.damage || "N/A"}
                                     <br />
-                                    Address: {item.feature.ADDRESS || 
-                                                item.feature.address || 
-                                                item.feature.SCHOOL_STREET_ADDRESS || 
-                                                "N/A"
-                                            }
+                                    Address:{" "}
+                                    {item.feature.ADDRESS ||
+                                        item.feature.address ||
+                                        item.feature.SCHOOL_STREET_ADDRESS ||
+                                        "N/A"}
                                     <br />
-                                    Population With In the Block:{" "}
+                                    Population Within the Block:{" "}
                                     {populationInfo
                                         ? populationInfo.population.toLocaleString()
                                         : "Loading..."}

@@ -51,6 +51,7 @@ const Menu = ({
     infrastructureLayers,
     isCustomScenario,
     isCustomSketchComplete,
+    isCustomSearch,
     applyFilter,
 }) => {
     const [sourceInfra, setSourceInfra] = useState("");
@@ -80,22 +81,23 @@ const Menu = ({
     return (
         <div className="menu">
             <div className="menu-title">Routing</div>
-            <div className="section-divider"></div>
-            <div className="menu-item">
-                <label htmlFor="sourceInfra">Source Infrastructure:</label>
-                <select
-                    id="sourceInfra"
-                    value={sourceInfra}
-                    onChange={(e) => setSourceInfra(e.target.value)}
-                >
-                    <option value="">Select Source Infrastructure</option>
-                    {Object.keys(infrastructureLayers).map((layerKey) => (
-                        <option key={layerKey} value={layerKey}>
-                            {infrastructureLayers[layerKey].name}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <div className="section-divider"></div>{!isCustomSearch && (  // Only show source infrastructure if not a custom search
+                <div className="menu-item">
+                    <label htmlFor="sourceInfra">Source Infrastructure:</label>
+                    <select
+                        id="sourceInfra"
+                        value={sourceInfra}
+                        onChange={(e) => setSourceInfra(e.target.value)}
+                    >
+                        <option value="">Select Source Infrastructure</option>
+                        {Object.keys(infrastructureLayers).map((layerKey) => (
+                            <option key={layerKey} value={layerKey}>
+                                {infrastructureLayers[layerKey].name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
             <div className="menu-item">
                 <label htmlFor="targetInfra">Target Infrastructure:</label>
                 <select
@@ -122,6 +124,7 @@ const Menu = ({
                     onChange={(selected) => setSelectedNeighborhoods(selected)}
                 />
             </div>
+            
             {isCustomScenario && (
                 <div className="custom-scenario-container">
                     <div className="custom-scenario-title">Custom Earthquake Scenario</div>
