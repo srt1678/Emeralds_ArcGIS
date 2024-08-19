@@ -124,7 +124,7 @@ The UI is composed of several key elements:
 
 ## 9. Future Enhancements
 
-Potential areas for future development include:
+Potential areas for future development may include:
 - Integration with real-time seismic data
 - More detailed building damage assessment
 - Expanded infrastructure types (e.g., power stations, water supply)
@@ -139,21 +139,17 @@ Potential areas for future development include:
 - Node.js and npm installed on your machine
 - Credential from ArcGIS Location Platform (https://location.arcgis.com/sign-up/)
 
-### 10.2 Setup
-
+### 10.2 Setup and Running the App
 1. Clone the repository to your local machine.
 2. Navigate to the project directory in your terminal.
-3. Run `npm install`
-4. Run `npm run dev`
-5. Log in with your ArcGIS Developer account credentials when prompted.
+3. Run `npm install` to install dependencies.
+4. Run `npm run dev` to start the development server.
+5. Open your web browser and navigate to `http://localhost:5173` (or the port specified in the console output).
+6. Log in with your ArcGIS Location Platform credentials when prompted.
 
-### 10.3 Running the App
+The app should now be running and ready for use.
 
-1. Start the development server:
-2. Open your web browser and navigate to `http://localhost:5173` (or the port specified in the console output).
-3. Log in with your ArcGIS Developer account credentials when prompted.
-
-### 10.4 How to Use the App
+### 10.3 How to Use the App
 
 1. **Selecting an Earthquake Scenario**
    - Use the layer list to toggle between M6.8, M7.2, or custom earthquake scenarios.
