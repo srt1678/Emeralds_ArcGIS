@@ -1,5 +1,3 @@
-
-
 # Seattle Earthquake Scenario Analysis App Documentation
 
 ## Table of Contents
@@ -13,6 +11,7 @@
 8. [Data Flow](#data-flow)
 9. [Future Enhancements](#future-enhancements)
 10. [Usage](#usage)
+11. [Troubleshooting](#troubleshooting)
 
 ## 1. Overview
 
@@ -70,7 +69,7 @@ The application is structured into several key directories:
 - Configures different travel modes for routing (walking, driving with/without highways)
 
 ### 4.4 Earthquake Scenarios (earthquakeScenarioModes.js)
-- Defines different earthquake scenario modes (M6.8, M7, custom)
+- Defines different earthquake scenario modes (M6.8, M7.2, custom)
 
 ## 5. Utilities
 
@@ -92,7 +91,7 @@ The application is structured into several key directories:
 ## 6. Core Functionality
 
 ### 6.1 Earthquake Scenario Analysis
-- Users can visualize predefined (M6.8, M7) or custom earthquake scenarios
+- Users can visualize predefined (M6.8, M7.2) or custom earthquake scenarios
 - The app calculates and displays affected infrastructure
 
 ### 6.2 Closest Facility Analysis
@@ -130,6 +129,7 @@ Potential areas for future development include:
 - More detailed building damage assessment
 - Expanded infrastructure types (e.g., power stations, water supply)
 - Time-based analysis for long-term recovery planning
+- Neighborhood selection feature to focus analysis on specific areas of Seattle
 
 
 ## 10. Usage
@@ -186,25 +186,15 @@ Potential areas for future development include:
    - Use the layer list to toggle visibility of different infrastructure and data layers.
 
 8. **Viewing the Legend**
-   - Click the legend button to view symbol explanations for visible layers.
+   - Click the legend button in the lower right to view symbol explanations for visible layers.
 
 9. **Clearing the Map**
    - Use the eraser button in the upper right corner to remove all current states and graphics from the map.
 
-10. **Troubleshooting**
-    - If you encounter any issues or unexpected behavior, refresh the page and log in again.
-
-### 10.5 Tips for Effective Use
-
-- Start with predefined scenarios (M6.8 or M7.2) to understand the app's capabilities before creating custom scenarios.
-- Experiment with different combinations of source and target infrastructure to plan for various emergency scenarios.
-- Use the neighborhood selection feature to focus analysis on specific areas of Seattle.
-- Pay attention to the population data to prioritize high-impact areas in your analysis.
-- Regularly clear graphics and reset filters to ensure accurate results in new analyses.
 
 ## 11. Troubleshooting
-
-- If the map doesn't load, ensure you're logged in with valid ArcGIS Developer account credentials.
+- If you encounter any issues or unexpected behavior, refresh the page and log in again.
+- If the map doesn't load, ensure you're logged in with valid ArcGIS account credentials.
 - For performance issues, try reducing the number of visible layers or the extent of your analysis area.
 - If closest facility analysis fails, ensure both source and target infrastructure types are selected and visible on the map.
 - For any persistent issues, check the browser console for error messages and refer to the ArcGIS Maps SDK for JavaScript documentation.
