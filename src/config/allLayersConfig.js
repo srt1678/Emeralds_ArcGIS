@@ -12,30 +12,30 @@ import {
     fireStationLayer,
     dWWMainlinesLayer,
     privateSchoolsLayer,
-    publicSchoolsLayer, 
+    publicSchoolsLayer,
     earthquakeCustomScenarioLayer,
     emergencyHubsLayer,
     dwwPumpStationsLayer,
-    liquefactionZonesLayer
+    liquefactionZonesLayer,
 } from "../layers";
 
 const allLayersConfig = {
+    dWWMainlinesLayer,
     cityLightLineLayer,
     earthquakeLayer,
     unreinforcedBuildingLayer,
     neighborhoodLayer,
     populationLayer,
+    liquefactionZonesLayer,
     earthquakeM6Layer,
     earthquakeM7Layer,
+    earthquakeCustomScenarioLayer,
     hospitalLayer,
     fireStationLayer,
-    dWWMainlinesLayer,
     privateSchoolsLayer,
     publicSchoolsLayer,
-    earthquakeCustomScenarioLayer,
     emergencyHubsLayer,
     dwwPumpStationsLayer,
-    liquefactionZonesLayer
 };
 
 export default allLayersConfig;

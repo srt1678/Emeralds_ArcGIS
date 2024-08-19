@@ -112,13 +112,14 @@ const renderer = new UniqueValueRenderer({
 const earthquakeM7Layer = new FeatureLayer({
     id: "earthquakeM7Layer",
     url: "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/SeattleFault_M72/FeatureServer/5",
-    title: "Seattle Earthquake M7",
+    title: "Seattle Earthquake M7.2",
     visible: false,
     listMode: "show",
     // renderer: renderer,
     opacity: 0.5,
     popupTemplate: earthquakeM7Template,
     id: "earthquakeM7Layer",
+    note: "https://experience.arcgis.com/experience/2acb05d732134331bc05214740076373/page/Hazard-Explorer/?views=Earthquake-Scenarios%2CGround-Shaking%2CSeattle-M7.2-View"
 });
 
 export default earthquakeM7Layer;

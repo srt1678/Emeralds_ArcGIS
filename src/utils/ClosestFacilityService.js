@@ -140,9 +140,11 @@ export async function findClosestFacilities(
     searchResult = null
 ) {
     let incidentFeature;
-
+    
     if (isCustomSearch && searchResult) {
         incidentFeature = await prepareIncidentFeature(searchResult.feature, facilityLayer.spatialReference);
+        
+        
     } else {
         incidentFeature = new Graphic({
             geometry: incident.geometry,

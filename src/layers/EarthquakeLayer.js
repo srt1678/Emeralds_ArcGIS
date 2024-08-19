@@ -1,8 +1,7 @@
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
-import Extent from "@arcgis/core/geometry/Extent.js";
-import Point from "@arcgis/core/geometry/Point.js";
-import Circle from "@arcgis/core/geometry/Circle.js";
-import Graphic from "@arcgis/core/Graphic.js";
+import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer.js";
+import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol.js";
+import ClassBreaksRenderer from "@arcgis/core/renderers/ClassBreaksRenderer.js";
 
 // Define the popup template for the Earthquakes >1M layer
 const earthquakeTemplate = {
@@ -22,79 +21,87 @@ const earthquakeTemplate = {
     ],
 };
 
+// Define a custom renderer
+const earthquakeRenderer = new ClassBreaksRenderer({
+    field: "EARTHQUAKE_DEPTH_KM",
+    defaultSymbol: new SimpleMarkerSymbol({
+        style: "square",
+        size: 8,
+        color: [128, 128, 128, 0.5],
+        outline: {
+            color: [128, 128, 128],
+            width: 1
+        }
+    }),
+    classBreakInfos: [
+        {
+            minValue: 0.1,
+            maxValue: 5.5,
+            symbol: new SimpleMarkerSymbol({
+                style: "square",
+                size: 8,
+                color: [255, 255, 0, 0.5],  // Yellow
+                outline: { color: [255, 255, 0], width: 1 }
+            }),
+            label: "0.1 - 5.5"
+        },
+        {
+            minValue: 5.5,
+            maxValue: 13,
+            symbol: new SimpleMarkerSymbol({
+                style: "square",
+                size: 8,
+                color: [255, 165, 0, 0.5],  // Orange
+                outline: { color: [255, 165, 0], width: 1 }
+            }),
+            label: "5.5 - 13.0"
+        },
+        {
+            minValue: 13,
+            maxValue: 22,
+            symbol: new SimpleMarkerSymbol({
+                style: "square",
+                size: 8,
+                color: [255, 192, 203, 0.5],  // Pink
+                outline: { color: [255, 192, 203], width: 1 }
+            }),
+            label: "13.0 - 22.0"
+        },
+        {
+            minValue: 22,
+            maxValue: 30,
+            symbol: new SimpleMarkerSymbol({
+                style: "square",
+                size: 8,
+                color: [255, 0, 0, 0.5],  // Red
+                outline: { color: [255, 0, 0], width: 1 }
+            }),
+            label: "22.0 - 30.0"
+        },
+        {
+            minValue: 30,
+            maxValue: 98.5,
+            symbol: new SimpleMarkerSymbol({
+                style: "square",
+                size: 8,
+                color: [0, 0, 255, 0.5],  // Blue
+                outline: { color: [0, 0, 255], width: 1 }
+            }),
+            label: "30.0 - 98.5"
+        }
+    ]
+});
+
 // Define the Earthquakes >1M layer
 const earthquakeLayer = new FeatureLayer({
     id: "earthquakeLayer",
     url: "https://gis.dnr.wa.gov/site1/rest/services/Public_Geology/Earthquake/MapServer/5",
-		title: "Seattle Earthquakes >1M",
+    title: "Seattle Earthquakes >1M",
     outFields: ["*"],
     visible: false,
     listMode: "show",
     popupTemplate: earthquakeTemplate,
+    // renderer: earthquakeRenderer,
+    note: "Earthquakes are sudden releases of crustal stress, generating seismic waves, which are then detected by seismometers located throughout the world. This point feature class includes earthquake hypocenters throughout the state of Washington. For each event, there are latitude and longitude coordinates, earthquake depth, an observed date and time, and an earthquake magnitude. Earthquake data were obtained from the Pacific Northwest Seismic Network (PNSN). Funding for this data compilation was provided through a U.S. Department of Energy geothermal grant.",
 });
-
-function addEarthquakeGraphics() {
-	const seattleExtent = new Extent({
-		xmin: -122.45,
-		ymin: 47.5,
-		xmax: -122.2,
-		ymax: 47.7,
-		spatialReference: {
-			wkid: 4326,
-		},
-	});
-	const query = earthquakeLayer.createQuery();
-	query.geometry = seattleExtent;
-	query.spatialRelationship = "intersects";
-	query.outFields = ["*"];
-	query.returnGeometry = true;
-
-	return earthquakeLayer
-		.queryFeatures(query)
-		.then((featureSet) => {
-			const graphics = featureSet.features.map((feature) => {
-				const attributes = feature.attributes;
-				const latitude = attributes.LATITUDE_DECIMAL_DEGREES;
-				const longitude = attributes.LONGITUDE_DECIMAL_DEGREES;
-				const magnitude = attributes.EARTHQUAKE_MAGNITUDE;
-
-				// Calculate affected radius
-				const radiusMeter = Math.pow(10, 0.43 * magnitude - 1.55) * 1000;
-
-				// Create a center point of earthquake
-				const point = new Point({
-					latitude: latitude,
-					longitude: longitude,
-				});
-
-				// Create a circle representing the earthquake
-				const circle = new Circle({
-					center: point,
-					geodesic: true,
-					radius: radiusMeter,
-					radiusUnit: "meters",
-				});
-
-				// Create a graphic for the affected area circle
-				return new Graphic({
-					geometry: circle,
-					symbol: {
-						type: "simple-fill",
-						color: [255, 0, 0, 0.25],
-						outline: {
-							color: "red",
-							width: 1,
-						},
-					},
-				});
-			});
-
-			return graphics;
-		})
-		.catch((error) => {
-			console.error("Error querying earthquake features:", error);
-			return [];
-		});
-}
-
-export { earthquakeLayer, addEarthquakeGraphics };
+export default earthquakeLayer;

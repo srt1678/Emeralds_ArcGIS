@@ -25,10 +25,10 @@ export const infrastructureLayers = {
         layer: publicSchoolsLayer,
         name: "Public Schools",
     },
-    dwwPumpStationsLayer: {
-        layer: dwwPumpStationsLayer,
-        name: "Pump Stations"
-    },
+    // dwwPumpStationsLayer: {
+    //     layer: dwwPumpStationsLayer,
+    //     name: "Pump Stations"
+    // },
     emergencyHubsLayer: {
         layer: emergencyHubsLayer,
         name: "Emergency Hubs"

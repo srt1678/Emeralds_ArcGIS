@@ -24,7 +24,8 @@ const emergencyHubsLayer = new FeatureLayer({
   outFields: ["*"],
   visible: false,
   listMode: "show",
-  popupTemplate: emergencyHubsTemplate
+  popupTemplate: emergencyHubsTemplate,
+  note: "Community Emergency Hubs are places where people gather after a disaster to help each other. Hubs serve as a central gathering place among neighbors in homes, apartments and condominiums, some who have organized using SNAP."
 });
 
 export default emergencyHubsLayer;

@@ -21,9 +21,10 @@ import {
     MdKeyboardDoubleArrowLeft,
 } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+// import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import * as projection from "@arcgis/core/geometry/projection";
 import Point from "@arcgis/core/geometry/Point";
+import { RECORD_SEP } from "papaparse";
 
 const MapWrapper = ({
     featuresUnderDamage,
@@ -44,19 +45,23 @@ const MapWrapper = ({
     const [showAdvanceSelection, setShowAdvanceSelection] = useState(false);
     // const [showAnalysis, setShowAnalysis] = useState(true);
     const [clearLayersFlag, setClearLayersFlag] = useState(false);
+    const [clearTrigger, setClearTrigger] = useState(0);
 
     // Search bar
     const [searchResult, setSearchResult] = useState(null);
     const [showSearchMenu, setShowSearchMenu] = useState(false);
     const [isCustomSearch, setIsCustomSearch] = useState(false);
 
-    // Custom earthqukae scenarios
+    // Modeled earthquake scenarios
+    const [isModeledScenario, setIsModeledScenario] = useState(false);
+
+    // Custom earthquake scenarios
     const [sketchWidget, setSketchWidget] = useState(null);
     const [isCustomScenario, setIsCustomScenario] = useState(false);
     const [customScenarioGeometry, setCustomScenarioGeometry] = useState(null);
     const [isCustomSketchComplete, setIsCustomSketchComplete] = useState(false);
 
-    // Ckear all states
+    // Clear all states
     const handleClearAll = useCallback(() => {
         setShowSearchMenu(false);
         setIsCustomSearch(false);
@@ -67,6 +72,7 @@ const MapWrapper = ({
         setIsCustomSketchComplete(false);
         // trigger layer clearing in CustomLayerList
         setClearLayersFlag(true);
+        setClearTrigger((prev) => prev + 1);
 
         if (view) {
             // Clear all graphics from the view
@@ -89,12 +95,58 @@ const MapWrapper = ({
         }
 
         // Reset all layer visibilities
-        Object.values(earthquakeScenarioModes).forEach(mode => {
+        Object.values(earthquakeScenarioModes).forEach((mode) => {
             if (mode.layer) {
                 mode.layer.visible = false;
             }
         });
     }, [view, sketchWidget, setFeaturesUnderDamage]);
+
+    const handleZoomToFeature = useCallback(
+        async (x, y, spatialReference) => {
+            if (!view) {
+                console.warn("View is not available. Zoom operation skipped.");
+                return;
+            }
+            if (view) {
+                try {
+                    // Ensure the projection module is loaded
+                    await projection.load();
+
+                    // Define the target spatial reference (view's spatial reference)
+                    const targetSpatialReference = view.spatialReference;
+
+                    // Create a point geometry from x, y
+                    const point = new Point({
+                        x,
+                        y,
+                        spatialReference,
+                    });
+
+                    // Reproject the point to match the view's spatial reference
+                    const reprojectedPoint = projection.project(
+                        point,
+                        targetSpatialReference
+                    );
+
+                    // Zoom to the reprojected point
+                    view.goTo({
+                        target: reprojectedPoint,
+                        zoom: 15,
+                    }).catch((error) => {
+                        if (error.name !== "AbortError") {
+                            console.error("Error in view.goTo():", error);
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error in projecting geometry:", error);
+                }
+            } else {
+                console.error("View is not available");
+            }
+        },
+        [view]
+    );
 
     // Reset clearLayersFlag after it's been consumed
     useEffect(() => {
@@ -122,10 +174,6 @@ const MapWrapper = ({
                 // );
             };
             fetchPopulationData();
-
-            // Zoom to the features
-            // const geometries = featuresUnderDamage.map(feature => feature.geometry);
-            // view.goTo(geometries);
         }
     }, [featuresUnderDamage, view]);
 
@@ -200,10 +248,17 @@ const MapWrapper = ({
             setIsCustomScenario(true);
             setIsCustomSketchComplete(false);
             setFeaturesUnderDamage([]);
+        } else if (
+            layer === earthquakeScenarioModes.earthquakeM6ImpactMode.layer ||
+            layer === earthquakeScenarioModes.earthquakeM7ImpactMode.layer
+        ) {
+            setIsCustomScenario(false);
+            setIsModeledScenario(true);
         } else {
             // console.log("Exiting custom scenario mode");
             // When activeLayer is null
             setIsCustomScenario(false);
+            setIsModeledScenario(false);
             if (view && sketchWidget) {
                 view.ui.remove(sketchWidget);
                 setSketchWidget(null);
@@ -237,33 +292,14 @@ const MapWrapper = ({
     const handleSearchComplete = useCallback(
         (result) => {
             setSearchResult(result);
+            // console.log(JSON.stringify(result, null, 2));
             if (result && result.feature && result.feature.geometry) {
-                // console.log("Search completed in MapWrapper:", result.name);
-                setShowSearchMenu(true); // Show the menu when there's a valid search result
+                setShowSearchMenu(true);
                 setIsCustomSearch(true);
                 try {
-                    const point = new Point({
-                        x: result.feature.geometry.x,
-                        y: result.feature.geometry.y,
-                        spatialReference:
-                            result.feature.geometry.spatialReference,
-                    });
-
-                    // console.log("Created Point geometry:", point);
-
+                    const { x, y, spatialReference } = result.feature.geometry;
                     if (view) {
-                        view.goTo({
-                            target: point,
-                            zoom: 5,
-                        }).catch((error) => {
-                            if (error.name !== "AbortError") {
-                                console.error("Error in view.goTo():", error);
-                            }
-                        });
-                    } else {
-                        console.warn(
-                            "View is not available for zooming to the search result."
-                        );
+                        handleZoomToFeature(x, y, spatialReference);
                     }
                 } catch (error) {
                     console.error("Error processing search result:", error);
@@ -274,7 +310,7 @@ const MapWrapper = ({
                 setIsCustomSearch(false);
             }
         },
-        [view]
+        [handleZoomToFeature]
     );
 
     // Handle menu visibility
@@ -285,48 +321,6 @@ const MapWrapper = ({
             setShowAdvanceSelection(false);
         }
     }, [searchResult, showSearchMenu, activeLayer, isCustomScenario]);
-
-    const handleZoomToFeature = useCallback(
-        async (x, y, spatialReference) => {
-            if (view) {
-                try {
-                    // Ensure the projection module is loaded
-                    await projection.load();
-
-                    // Define the target spatial reference (view's spatial reference)
-                    const targetSpatialReference = view.spatialReference;
-
-                    // Create a point geometry from x, y
-                    const point = new Point({
-                        x,
-                        y,
-                        spatialReference,
-                    });
-
-                    // Reproject the point to match the view's spatial reference
-                    const reprojectedPoint = projection.project(
-                        point,
-                        targetSpatialReference
-                    );
-
-                    // Zoom to the reprojected point
-                    view.goTo({
-                        target: reprojectedPoint,
-                        zoom: 15,
-                    }).catch((error) => {
-                        if (error.name !== "AbortError") {
-                            console.error("Error in view.goTo():", error);
-                        }
-                    });
-                } catch (error) {
-                    console.error("Error in projecting geometry:", error);
-                }
-            } else {
-                console.error("View is not available");
-            }
-        },
-        [view]
-    );
 
     return (
         <div className="map-wrapper">
@@ -479,7 +473,7 @@ const MapWrapper = ({
                     </>
                 )}
                 {/* M6 & M7 Earthquake Scenario */}
-                {activeLayer && !isCustomScenario && (
+                {activeLayer && !isCustomScenario && isModeledScenario && (
                     <>
                         <div className="advance-selection-container">
                             <div

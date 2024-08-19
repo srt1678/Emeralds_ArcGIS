@@ -7,7 +7,7 @@ export const earthquakeScenarioModes = {
     earthquakeM6ImpactMode: {
         layer: earthquakeM6Layer,
         filterField: "damage",
-        name: "M6 Impact Mode",
+        name: "M6.8 Impact Mode",
     },
     earthquakeM7ImpactMode: {
         layer: earthquakeM7Layer,

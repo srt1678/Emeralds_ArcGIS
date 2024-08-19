@@ -1,31 +1,47 @@
 .legend-toggle-button {
-	position: absolute;
-	bottom: 15px;
-	right: 15px;
-	z-index: 1000;
-	width: 40px;
-	height: 40px;
-	background-color: white;
-	color: white;
-	border: solid 1px black;
-	border-radius: 22.5px;
-	cursor: pointer;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    color: white;
+    border: solid 1px black;
+    border-radius: 22.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .legend-toggle-icon {
-	color: black;
-	width: 20px;
-	height: 20px;
+    color: black;
+    width: 20px;
+    height: 20px;
 }
+
 .legend-toggle-button:hover {
-	background-color: #f3f3f3;
+    background-color: #f3f3f3;
 }
+
 .esri-legend {
-	border-radius: 8px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	position: absolute;
-	bottom: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 60px;
+    right: 15px;
+    background-color: white;
+    max-height: 35vh !important;
+    overflow-y: auto;
 }
-.esri-legend.esri-widget {
-	max-height: 35vh !important;
+
+.legend-layer-info {
+    /* font-weight: bold; */
+    padding: 10px;
+    color: #333;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+}
+
+.esri-legend__service {
+    padding: 10px;
 }

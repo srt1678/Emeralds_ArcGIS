@@ -7,9 +7,10 @@ import allLayersConfig from "../config/allLayersConfig";
 import LegendComponent from "./LegendComponent";
 import "../styles.css";
 import "./SearchBar.css";
+import "./LegendComponent.css";
 import { loadPowerStationLayer } from "../layers/PowerStationLayer";
 
-const MapComponent = ({ view, setView,  onSearchComplete, onClearAll }) => {
+const MapComponent = ({ view, setView, onSearchComplete, onClearAll, clearTrigger }) => {
     const mapRef = useRef(null);
     const legendRef = useRef(null);
     // const searchRef = useRef(null);
@@ -30,6 +31,12 @@ const MapComponent = ({ view, setView,  onSearchComplete, onClearAll }) => {
     };
 
     useEffect(() => {
+        if (clearTrigger > 0) {
+            clearGraphics();
+        }
+    }, [clearTrigger, onClearAll, onSearchComplete]);
+
+    useEffect(() => {
         // console.log("MapComponent useEffect called");
         if (!mapRef.current) {
             console.log("mapRef.current is null");
@@ -47,6 +54,7 @@ const MapComponent = ({ view, setView,  onSearchComplete, onClearAll }) => {
 
         legendRef.current = new Legend({
             view: newView,
+            container: document.createElement("div"),
         });
 
         map.addMany(visibleLayers);
@@ -81,7 +89,11 @@ const MapComponent = ({ view, setView,  onSearchComplete, onClearAll }) => {
         });
         // Add event listener for search-complete
         searchWidgetRef.current.on("search-complete", (event) => {
-            if (event.results && event.results[0] && event.results[0].results[0]) {
+            if (
+                event.results &&
+                event.results[0] &&
+                event.results[0].results[0]
+            ) {
                 const result = event.results[0].results[0];
                 // console.log("Search result address:", result.name);
                 // console.log("Full search result:", result);
@@ -94,13 +106,13 @@ const MapComponent = ({ view, setView,  onSearchComplete, onClearAll }) => {
         });
 
         // Clear graphics button
-        const clearButton = document.createElement('button');
+        const clearButton = document.createElement("button");
         clearButton.innerHTML = `
             <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M5.662 23l-5.369-5.365c-.195-.195-.293-.45-.293-.707 0-.256.098-.512.293-.707l14.929-14.928c.195-.194.451-.293.707-.293.255 0 .512.099.707.293l7.071 7.073c.196.195.293.451.293.708 0 .256-.097.511-.293.707l-11.216 11.219h5.514v2h-12.343zm3.657-2l-5.486-5.486-1.419 1.414 4.076 4.072h2.829zm6.605-17.581l-10.677 10.68 5.658 5.659 10.676-10.682-5.657-5.657z"/></svg>
         `;
-        clearButton.title = 'Clear Graphics';
-        clearButton.className = 'custom-clear-button';
-        clearButton.addEventListener('click', clearGraphics);
+        clearButton.title = "Clear Graphics";
+        clearButton.className = "custom-clear-button";
+        clearButton.addEventListener("click", clearGraphics);
 
         // Add search widget and clear button to the UI
         newView.ui.add(searchWidgetRef.current, "top-right");
@@ -139,7 +151,12 @@ const MapComponent = ({ view, setView,  onSearchComplete, onClearAll }) => {
 
     return (
         <>
-            <LegendComponent toggleLegend={toggleLegend} />
+            <LegendComponent
+                toggleLegend={toggleLegend}
+                isLegendVisible={isLegendVisible}
+                view={viewRef.current}
+                clearTrigger={clearTrigger}
+            />
             <div ref={mapRef} className="map-view"></div>
         </>
     );
