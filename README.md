@@ -1,17 +1,17 @@
 # Seattle Earthquake Scenario Analysis App Documentation
 
 ## Table of Contents
-1. [Overview](#overview)
-2. [Application Structure](#application-structure)
-3. [Key Components](#key-components)
-4. [Configuration](#configuration)
-5. [Utilities](#utilities)
-6. [Core Functionality](#core-functionality)
-7. [User Interface](#user-interface)
-8. [Data Flow](#data-flow)
-9. [Future Enhancements](#future-enhancements)
-10. [Usage](#usage)
-11. [Troubleshooting](#troubleshooting)
+1. [Overview](#1-overview)
+2. [Application Structure](#2-application-structure)
+3. [Key Components](#3-key-components)
+4. [Configuration](#4-configuration)
+5. [Utilities](#5-utilities)
+6. [Core Functionality](#6-core-functionality)
+7. [User Interface](#7-user-interface)
+8. [Data Flow](#8-data-flow)
+9. [Future Enhancements](#9-future-enhancements)
+10. [Usage](#10-usage)
+11. [Troubleshooting](#11-troubleshooting)
 
 ## 1. Overview
 
